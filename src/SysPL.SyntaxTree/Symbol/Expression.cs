@@ -1,5 +1,6 @@
 namespace SysPL.SyntaxTree.Symbol
 {
-	public abstract class Expression {
+	public abstract class Expression
+	{
 	}
 }

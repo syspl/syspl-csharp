@@ -1,0 +1,7 @@
+{
+	"Projects": [
+		"./src/Kean",
+		"./src/SysPL.SyntaxTree",
+		"./src/SysPL.FrontEnd"
+	]
+}

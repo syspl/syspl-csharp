@@ -1,5 +1,6 @@
 namespace SysPL.SyntaxTree
 {
-	public abstract class Node {
+	public abstract class Node
+	{
 	}
 }
