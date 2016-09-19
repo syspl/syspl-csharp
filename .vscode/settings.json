@@ -17,5 +17,8 @@
 		"**/obj": true,
 		".vscode": true,
 		"**/project.lock.json": true
-	}
+	},
+	"licenser.projectName": "SysPL",
+	"licenser.license": "GPLv3",
+	"licenser.author": "Simon Mika <simon@mika.se>"
 }
