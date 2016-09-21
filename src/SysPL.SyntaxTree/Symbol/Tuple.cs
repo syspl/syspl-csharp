@@ -22,13 +22,13 @@ namespace SysPL.SyntaxTree.Symbol
 {
 	public class Tuple : Expression
 	{
-		readonly Generic.IEnumerable<Expression> elements;
-		public Generic.IEnumerable<Expression> Elements { get { return this.elements; } }
+		public Generic.IEnumerable<Expression> Elements { get; }
 		public Tuple(params Expression[] elements) : this((Generic.IEnumerable<Expression>)elements)
 		{ }
-		public Tuple(Generic.IEnumerable<Expression> elements)
+		public Tuple(Generic.IEnumerable<Expression> elements, Type.Expression type = null):
+			base(type)
 		{
-			this.elements = elements;
+			this.Elements = elements;
 		}
 	}
 }

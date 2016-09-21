@@ -20,12 +20,11 @@ namespace SysPL.SyntaxTree.Symbol
 {
 	public class Identifier : Expression
 	{
-		readonly string name;
-		public string Name { get { return this.name; } }
+		public string Name { get; }
 		public Identifier(string name, Type.Expression type = null) :
 			base(type)
 		{
-			this.name = name;
+			this.Name = name;
 		}
 	}
 }

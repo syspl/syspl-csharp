@@ -20,11 +20,10 @@ namespace SysPL.SyntaxTree.Type
 {
 	public class Identifier : Expression
 	{
-		readonly string name;
-		public string Name { get { return this.name; } }
+		public string Name { get; }
 		public Identifier(string name)
 		{
-			this.name = name;
+			this.Name = name;
 		}
 	}
 }

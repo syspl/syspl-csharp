@@ -23,12 +23,11 @@ namespace SysPL.SyntaxTree
 {
 	public class Block : Expression
 	{
-		readonly Statement[] statements;
-		public Generic.IEnumerable<Statement> Statements { get { return this.statements; } }
+		public Generic.IEnumerable<Statement> Statements { get; }
 		public Block(Generic.IEnumerable<Statement> statements) : this(statements.ToArray()) { }
 		public Block(params Statement[] statements) : base(Block.GetType(statements.Last()))
 		{
-			this.statements = statements;
+			this.Statements = statements;
 		}
 		static Type.Expression GetType(Statement statement)
 		{
