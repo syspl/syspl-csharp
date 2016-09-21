@@ -16,7 +16,7 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree.Symmbol
+namespace SysPL.SyntaxTree.Symbol
 {
 	public class Identifier : Expression
 	{

@@ -20,5 +20,10 @@ namespace SysPL.SyntaxTree.Symbol
 {
 	public abstract class Expression
 	{
+		public Type.Expression Type { get; }
+		protected Expression(Type.Expression type = null)
+		{
+			this.Type = type;
+		}
 	}
 }
