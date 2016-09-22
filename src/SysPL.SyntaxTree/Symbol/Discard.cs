@@ -16,15 +16,13 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree
+namespace SysPL.SyntaxTree.Symbol
 {
-	public abstract class Expression : Statement
+	public class Discard : Expression
 	{
-		public abstract int Precedence { get; }
-		public Type.Expression Type { get; }
-		protected Expression(Type.Expression type)
+		public Discard(Type.Expression type = null) :
+			base(type)
 		{
-			this.Type = type;
 		}
 	}
 }

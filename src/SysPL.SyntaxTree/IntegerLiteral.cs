@@ -4,7 +4,7 @@
 //
 // SysPL is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
+// the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
 //
 // SysPL is distributed in the hope that it will be useful,
@@ -18,13 +18,12 @@
 
 namespace SysPL.SyntaxTree
 {
-	public abstract class Expression : Statement
+	public class IntegerLiteral : Literal
 	{
-		public abstract int Precedence { get; }
-		public Type.Expression Type { get; }
-		protected Expression(Type.Expression type)
+		public long Value { get; set; }
+		public IntegerLiteral(long value, string raw, Type.Expression type = null) : base(raw, type)
 		{
-			this.Type = type;
+			this.Value = value;
 		}
 	}
 }
