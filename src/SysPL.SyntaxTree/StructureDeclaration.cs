@@ -16,14 +16,15 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public class FunctionDeclaration : SymbolDeclaration
+	public class StructureDeclaration : TypeDeclaration
 	{
-		public Function Function { get; }
-		public FunctionDeclaration(Symbol.Identifier symbol, Function function) : base(symbol, true)
+		public Generic.IEnumerable<Statement> Statements { get; }
+		public StructureDeclaration(Type.Identifier name) : base(name)
 		{
-			this.Function = function;
 		}
 	}
 }

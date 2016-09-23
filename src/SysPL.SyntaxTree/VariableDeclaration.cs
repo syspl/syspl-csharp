@@ -18,7 +18,7 @@
 
 namespace SysPL.SyntaxTree
 {
-	public class VariableDeclaration : Declaration
+	public class VariableDeclaration : SymbolDeclaration
 	{
 		public VariableDeclaration(Symbol.Expression symbol) : this(symbol, false) { }
 		protected VariableDeclaration(Symbol.Expression symbol, bool immutable) : base(symbol, immutable)
