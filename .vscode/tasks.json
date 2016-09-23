@@ -1,0 +1,15 @@
+{
+	"version": "0.1.0",
+	"command": "dotnet",
+	"isShellCommand": true,
+	"args": [],
+	"tasks": [
+		{
+			"taskName": "build",
+			"args": [ "src/SysPL.SyntaxTree" ],
+			"isBuildCommand": true,
+			"showOutput": "silent",
+			"problemMatcher": "$msCompile"
+		}
+	]
+}
