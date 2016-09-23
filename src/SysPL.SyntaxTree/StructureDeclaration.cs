@@ -4,7 +4,7 @@
 //
 // SysPL is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
+// the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
 //
 // SysPL is distributed in the hope that it will be useful,
@@ -16,11 +16,14 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class Declaration : Statement
+	public class StructureDeclaration : TypeDeclaration
 	{
-		protected Declaration()
+		public Generic.IEnumerable<Statement> Statements { get; }
+		public StructureDeclaration(Type.Identifier name) : base(name)
 		{
 		}
 	}

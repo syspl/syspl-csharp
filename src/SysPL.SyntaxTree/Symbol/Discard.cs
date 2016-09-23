@@ -16,11 +16,12 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree
+namespace SysPL.SyntaxTree.Symbol
 {
-	public abstract class Declaration : Statement
+	public class Discard : Expression
 	{
-		protected Declaration()
+		public Discard(Type.Expression type = null) :
+			base(type)
 		{
 		}
 	}

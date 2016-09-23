@@ -23,6 +23,7 @@ namespace SysPL.SyntaxTree
 {
 	public class Block : Expression
 	{
+		public override int Precedence { get { return int.MaxValue; } }
 		public Generic.IEnumerable<Statement> Statements { get; }
 		public Block(Generic.IEnumerable<Statement> statements) : this(statements.ToArray()) { }
 		public Block(params Statement[] statements) : base(Block.GetType(statements.Last()))

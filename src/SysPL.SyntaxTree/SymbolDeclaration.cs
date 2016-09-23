@@ -18,10 +18,14 @@
 
 namespace SysPL.SyntaxTree
 {
-	public abstract class Declaration : Statement
+	public abstract class SymbolDeclaration : Declaration
 	{
-		protected Declaration()
+ 		public Symbol.Expression Symbol { get; }
+		public bool Immutable { get; }
+		protected SymbolDeclaration(Symbol.Expression symbol, bool immutable)
 		{
+			this.Symbol = symbol;
+			this.Immutable = immutable;
 		}
 	}
 }

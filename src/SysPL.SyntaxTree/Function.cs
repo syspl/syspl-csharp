@@ -4,7 +4,7 @@
 //
 // SysPL is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
+// the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
 //
 // SysPL is distributed in the hope that it will be useful,
@@ -16,12 +16,15 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree
-{
-	public abstract class Declaration : Statement
-	{
-		protected Declaration()
+namespace SysPL.SyntaxTree {
+	public class Function : Expression {
+		public override int Precedence { get { return 500; } }
+		public Symbol.Expression Arguments { get; }
+		public Expression Expression { get; }
+		public Function(Symbol.Expression arguments, Expression expression, Type.Expression type = null) : base(type)
 		{
+			this.Arguments = arguments;
+			this.Expression = expression;
 		}
 	}
 }

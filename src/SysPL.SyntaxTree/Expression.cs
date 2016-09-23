@@ -20,8 +20,9 @@ namespace SysPL.SyntaxTree
 {
 	public abstract class Expression : Statement
 	{
+		public abstract int Precedence { get; }
 		public Type.Expression Type { get; }
-		public Expression(Type.Expression type)
+		protected Expression(Type.Expression type)
 		{
 			this.Type = type;
 		}

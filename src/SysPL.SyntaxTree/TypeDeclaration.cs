@@ -18,10 +18,12 @@
 
 namespace SysPL.SyntaxTree
 {
-	public abstract class Declaration : Statement
+	public abstract class TypeDeclaration : Declaration
 	{
-		protected Declaration()
+ 		public Type.Identifier Name { get; }
+		protected TypeDeclaration(Type.Identifier name)
 		{
+			this.Name = name;
 		}
 	}
 }
