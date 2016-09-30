@@ -17,6 +17,7 @@
 //
 
 using System;
+using Generic = System.Collections.Generic;
 
 namespace Kean.Extension
 {
@@ -36,12 +37,20 @@ namespace Kean.Extension
 		}
 		public static bool SameOrEquals(this object me, object other)
 		{
-			return object.ReferenceEquals(me, other) ||
-				!object.ReferenceEquals(me, null) && me.Equals(other);
+			return me.Same(other) || me.NotNull() && me.Equals(other);
 		}
 		public static int Hash(this object me)
 		{
 			return object.ReferenceEquals(me, null) ? 0 : me.GetHashCode();
+		}
+		public static int Hash<T>(this object me, Generic.IEnumerator<T> others) {
+			return unchecked(me.Hash() * 31 + (others.MoveNext() ? others.Current.Hash(others) : 0));
+		}
+		public static int Hash<T>(this object me, Generic.IEnumerable<T> others) {
+			return me.Hash(others.GetEnumerator());
+		}
+		public static int Hash(this object me, params object[] others) {
+			return me.Hash(others.GetEnumerator());
 		}
 		public static T ConvertType<T>(this object me)
 		{

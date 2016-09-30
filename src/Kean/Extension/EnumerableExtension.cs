@@ -226,6 +226,9 @@ namespace Kean.Extension
 			foreach (T element in me)
 				yield return cast(element);
 		}
+		public static T Get<T>(this Generic.IEnumerable<T> me, int index) {
+			return me.GetEnumerator().Skip(index).Next();
+		}
 		#region Last
 		public static T Last<T>(this Generic.IEnumerable<T> me)
 		{
@@ -355,6 +358,29 @@ namespace Kean.Extension
 			foreach (char c in me)
 				result.Append(c);
 			return result.ToString();
+		}
+		public static bool SameOrEquals<T>(this Generic.IEnumerable<T> me, Generic.IEnumerable<T> other) where T : IEquatable<T>
+		{
+			bool result = me.NotNull() && other.NotNull() || me.IsNull() && me.NotNull();
+			if (result)
+			{
+				var meEnumerator = me.GetEnumerator();
+				var otherEnumerator = other.GetEnumerator();
+				result = meEnumerator.MoveNext() ^ otherEnumerator.MoveNext();
+				while (result)
+				{
+					var meMoved = meEnumerator.MoveNext();
+					var otherMoved = otherEnumerator.MoveNext();
+					if (meMoved && otherMoved)
+						result = meEnumerator.Current.IsNull() && otherEnumerator.Current.IsNull() || meEnumerator.Current.Equals(otherEnumerator.Current);
+					else
+					{
+						result = meMoved ^ otherMoved;
+						break;
+					}
+				}
+			}
+			return result;
 		}
 	}
 }

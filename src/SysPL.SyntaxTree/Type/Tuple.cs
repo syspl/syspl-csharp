@@ -17,16 +17,30 @@
 //
 
 using Generic = System.Collections.Generic;
+using Kean.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
 	public class Tuple : Expression
 	{
+		public override int Precedence { get { return 30; } }
 		public Generic.IEnumerable<Expression> Elements { get; }
 		public Tuple(params Expression[] elements) : this((Generic.IEnumerable<Expression>)elements) { }
 		public Tuple(Generic.IEnumerable<Expression> elements)
 		{
 			this.Elements = elements;
+		}
+		public override bool Equals(Expression other)
+		{
+			return other is Tuple && this.Elements.SameOrEquals(((Tuple)other).Elements);
+		}
+		public override int GetHashCode()
+		{
+			return this.Hash(this.Elements);
+		}
+		public override string ToString()
+		{
+			return this.Elements.Map(element => element.ToString(this.Precedence)).Join(" * ");
 		}
 	}
 }

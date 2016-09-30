@@ -16,8 +16,39 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree.Type
 {
-	public abstract class Expression {
+	public abstract class Expression :
+			IEquatable<Expression>
+	{
+		public abstract int Precedence { get; }
+
+		public abstract bool Equals(Expression other);
+		// override object.Equals
+		public override bool Equals(object other)
+		{
+			return other is Expression && this.Equals((Expression)other);
+		}
+		public override int GetHashCode()
+		{
+			throw new NotImplementedException();
+		}
+		public static bool operator ==(Expression left, Expression right)
+		{
+			return left.Same(right) || left.NotNull() && left.Equals(right);
+		}
+		public static bool operator !=(Expression left, Expression right)
+		{
+			return !(left == right);
+		}
+		public string ToString(int parentPrecedance) {
+			var result = this.ToString();
+			if (this.Precedence < parentPrecedance)
+				result = "(" + result + ")";
+			return result;
+		}
 	}
 }

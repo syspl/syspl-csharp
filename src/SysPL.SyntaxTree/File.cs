@@ -16,27 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree.Type
+using Generic = System.Collections.Generic;
+
+namespace SysPL.SyntaxTree
 {
-	public class Identifier : Expression
+	public class File : Node
 	{
-		public override int Precedence { get { return 50; } }
-		public string Name { get; }
-		public Identifier(string name)
-		{
-			this.Name = name;
-		}
-		public override bool Equals(Expression other)
-		{
-			return other is Identifier && this.Name == ((Identifier)other).Name;
-		}
-		public override int GetHashCode()
-		{
-			return this.Name.GetHashCode();
-		}
-		public override string ToString()
-		{
-			return this.Name;
-		}
+		public Generic.IEnumerable<Statement> Statements { get; }
+		public File(Generic.IEnumerable<Statement> statements) {
+			this.Statements = statements;
+		 }
+		public File(params Statement[] statements) : this((Generic.IEnumerable<Statement>)statements) { }
 	}
 }
