@@ -20,14 +20,21 @@ namespace SysPL.SyntaxTree.Type
 {
 	public class Function : Expression
 	{
-		public string Name { get; }
+		public override int Precedence { get { return 10; } }
 		public Expression Argument { get; }
 		public Expression Result { get; }
-		public Function(string name, Expression argument, Expression result)
+		public Function(Expression argument, Expression result)
 		{
-			this.Name = name;
 			this.Argument = argument;
 			this.Result = result;
+		}
+		public override bool Equals(Expression other)
+		{
+			return other is Function && this.Argument == ((Function)other).Argument && this.Result == ((Function)other).Result;
+		}
+		public override string ToString()
+		{
+			return this.Argument.ToString(this.Precedence) + " -> " + this.Result.ToString(this.Precedence);
 		}
 	}
 }

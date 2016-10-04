@@ -1,4 +1,4 @@
-// Copyright (C) 2016  Simon Mika <simon@mika.se>
+﻿// Copyright (C) 2016  Simon Mika <simon@mika.se>
 //
 // This file is part of SysPL.
 //
@@ -16,27 +16,18 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SysPL.SyntaxTree.Type
+using Xunit;
+
+namespace SysPL.SyntaxTree.Tests
 {
-	public class Identifier : Expression
+	public class BuildTreeTests
 	{
-		public override int Precedence { get { return 50; } }
-		public string Name { get; }
-		public Identifier(string name)
+		[Fact]
+		public void StringLiteral()
 		{
-			this.Name = name;
-		}
-		public override bool Equals(Expression other)
-		{
-			return other is Identifier && this.Name == ((Identifier)other).Name;
-		}
-		public override int GetHashCode()
-		{
-			return this.Name.GetHashCode();
-		}
-		public override string ToString()
-		{
-			return this.Name;
+			var stringLiteral = new StringLiteral("Hac\"ker", "\"Hac\\\"er\"", new Type.Identifier("string"));
+			Assert.Equal(stringLiteral.Value, "Hac\"ker");
+			Assert.Equal(stringLiteral.Raw, "\"Hac\\\"er\"");
 		}
 	}
 }
