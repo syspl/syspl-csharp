@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2012, 2016  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,14 +16,18 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection
+namespace Kean
 {
-	public interface IList<T> :
-		IBlock<T>
+	/// <summary>
+	/// Enables collections to expose there inner data as an array without needing to copy it if possible.
+	/// </summary>
+	public interface IAsArray<T>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		/// <summary>
+		/// Extracts an array from <paramref>me</paramref>. Changing the resulting array may break <paramref>me</paramref>.
+		/// </summary>
+		/// <param name="me">Collection to extract array from.</param>
+		/// <returns>The content of <paramref>me</paramref> as an array. It may or may not be a copy.</returns>
+		T[] AsArray();
 	}
 }

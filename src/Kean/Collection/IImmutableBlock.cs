@@ -21,10 +21,10 @@ using Generic = System.Collections.Generic;
 
 namespace Kean.Collection
 {
-	public interface IImmutableVector<T> :
+	public interface IImmutableBlock<T> :
 		Generic.IEnumerable<T>,
-		IEquatable<IVector<T>>,
-		IEquatable<IImmutableVector<T>>
+		IEquatable<IBlock<T>>,
+		IEquatable<IImmutableBlock<T>>
 	{
 		int Count { get; }
 		T this[int index] { get; }

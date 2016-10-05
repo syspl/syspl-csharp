@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2009  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,14 +16,14 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection
+namespace Kean.Collection.Array
 {
-	public interface IList<T> :
-		IBlock<T>
+	public class Queue<T> :
+		Wrap.Queue<T>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		public Queue() : this(0) { }
+		public Queue(int capacity) : base(new List<T>(capacity)) { }
+		public Queue(params T[] backend) : base(new List<T>(backend)) { }
+		public Queue(int count, params T[] backend) : base(new List<T>(count, backend)) { }
 	}
 }

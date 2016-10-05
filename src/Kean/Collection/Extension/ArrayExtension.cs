@@ -1,4 +1,4 @@
-// Copyright (C) 2009  Simon Mika <simon@mika.se>
+// Copyright (C) 2011  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,32 +16,21 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection
+namespace Kean.Collection.Extension
 {
-	public class Vector<T> :
-		Abstract.Vector<T>
+	public static class ArrayExtension
 	{
-		T[] data;
-		public override int Count { get { return this.data.Length; } }
-		public override T this[int index]
+		public static Slice<T> Slice<T>(this T[] me, int offset, int count)
 		{
-			get { return this.data[index]; }
-			set { this.data[index] = value; }
+			return new Slice<T>(me, offset, count);
 		}
-		public Vector(int count) :
-			this(new T[count])
-		{ }
-		public Vector(params T[] data)
+		public static Merge<T> Merge<T>(this T[] me, IBlock<T> other)
 		{
-			this.data = data;
+			return new Merge<T>((Block<T>)me, other);
 		}
-		public static implicit operator Vector<T>(T[] array)
+		public static Merge<T> Merge<T>(this T[] me, T[] other)
 		{
-			return new Vector<T>(array);
-		}
-		public static explicit operator T[](Vector<T> vector)
-		{
-			return vector.data;
+			return new Merge<T>(me, other);
 		}
 	}
 }
