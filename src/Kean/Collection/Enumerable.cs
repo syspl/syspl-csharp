@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2011  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,14 +16,32 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using Generic = System.Collections.Generic;
+
 namespace Kean.Collection
 {
-	public interface IList<T> :
-		IBlock<T>
+	public class Enumerable<T> :
+		Generic.IEnumerable<T>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		Func<Generic.IEnumerator<T>> getEnumerator;
+		#region Constructors
+		public Enumerable(Func<Generic.IEnumerator<T>> getEnumerator)
+		{
+			this.getEnumerator = getEnumerator;
+		}
+		#endregion
+		#region IEnumerable<T> Members
+		public Generic.IEnumerator<T> GetEnumerator()
+		{
+			return this.getEnumerator();
+		}
+		#endregion
+		#region IEnumerable Members
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
+		#endregion
 	}
 }

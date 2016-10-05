@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2009  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,14 +16,16 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using Generic = System.Collections.Generic;
+
 namespace Kean.Collection
 {
-	public interface IList<T> :
-		IBlock<T>
+	public interface IBlock<T> :
+		Generic.IEnumerable<T>,
+		IEquatable<IBlock<T>>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		int Count { get; }
+		T this[int index] { get; set; }
 	}
 }

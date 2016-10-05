@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2009  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -18,12 +18,12 @@
 
 namespace Kean.Collection
 {
-	public interface IList<T> :
-		IBlock<T>
+	public interface IQueue<T>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		bool Empty { get; }
+		int Count { get; }
+		IQueue<T> Enqueue(T item);
+		T Peek();
+		T Dequeue();
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2009  Simon Mika <simon@mika.se>
+// Copyright (C) 2012, 2016  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,20 +16,11 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection.Abstract
+namespace Kean
 {
-	public abstract class Vector<T> :
-		CommonVector<T>,
-		IVector<T>,
-		IImmutableVector<T>
+	public interface IArrayCopyable<T>
 	{
-		public abstract T this[int index] { get; set; }
-
-		protected Vector()
-		{ }
-		protected sealed override T Get(int index)
-		{
-			return this[index];
-		}
+		int Count { get; }
+		bool CopyTo(T[] target, int targetOffset = 0, int count = -1, int sourceOffset = 0);
 	}
 }

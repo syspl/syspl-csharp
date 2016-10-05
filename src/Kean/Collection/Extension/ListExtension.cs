@@ -1,4 +1,4 @@
-// Copyright (C) 2019  Simon Mika <simon@mika.se>
+// Copyright (C) 2010  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -18,6 +18,7 @@
 
 using System;
 using Kean.Extension;
+using Generic = System.Collections.Generic;
 
 namespace Kean.Collection.Extension
 {
@@ -30,7 +31,7 @@ namespace Kean.Collection.Extension
 					me.Add(item);
 			return me;
 		}
-		public static IList<T> Add<T>(this IList<T> me, System.Collections.Generic.IEnumerable<T> items)
+		public static IList<T> Add<T>(this IList<T> me, Generic.IEnumerable<T> items)
 		{
 			if (items.NotNull())
 				foreach (T item in items)

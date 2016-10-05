@@ -19,15 +19,24 @@
 namespace Kean.Collection.Abstract
 {
 	public abstract class List<T> :
-		Vector<T>,
+		Block<T>,
 		IList<T>
 	{
-		protected List ()
+		protected List()
+		{ }
+		protected int CapacityCeiling(int capacity)
 		{
+			// It would be nice to put some science behind these numbers, bachelor thesis work?
+			return
+				capacity <= 16 ? 16 :
+				capacity <= 32 ? 32 :
+				capacity <= 64 ? 64 :
+				capacity <= 128 ? 128 :
+				(capacity / 256 + 1) * 256;
 		}
 		public abstract IList<T> Add(T item);
-		public abstract T Remove ();
+		public abstract T Remove();
 		public abstract IList<T> Insert(int index, T item);
-		public abstract T Remove (int index);
+		public abstract T Remove(int index);
 	}
 }

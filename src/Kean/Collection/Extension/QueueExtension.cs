@@ -1,4 +1,4 @@
-// Copyright (C) 2009  Simon Mika <simon@mika.se>
+// Copyright (C) 2010  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,13 +16,27 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection
+namespace Kean.Collection.Extension
 {
-	public interface IVector<T> :
-		System.Collections.Generic.IEnumerable<T>,
-		System.IEquatable<IVector<T>>
+	public static class QueueExtension
 	{
-		int Count { get; }
-		T this[int index] { get; set; }
+		public static IQueue<T> Enqueue<T>(this IQueue<T> me, System.Collections.Generic.IEnumerable<T> items)
+		{
+			foreach (T item in items)
+				me.Enqueue(item);
+			return me;
+		}
+		public static IQueue<T> Enqueue<T>(this IQueue<T> me, IQueue<T> source)
+		{
+			while (!source.Empty)
+				me.Enqueue(source.Dequeue());
+			return me;
+		}
+		public static IQueue<T> Clear<T>(this IQueue<T> me)
+		{
+			while (!me.Empty)
+				me.Dequeue();
+			return me;
+		}
 	}
 }

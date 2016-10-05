@@ -19,72 +19,38 @@
 namespace Kean.Collection
 {
 	public class List<T> :
+		Block<T>,
 		IList<T>
 	{
-		Array.List<T> data;
+		IList<T> backend;
 		#region Constructors
-		public List() :
-			this(0)
-		{ }
-		public List(int count)
+		public List() :	this(0) { }
+		public List(int count) : this(0, new Block<T>(count)) { }
+		public List(params T[] backend) : this(backend.Length, new Block<T>(backend)) { }
+		public List(int count, params T[] backend) : this(count, new Block<T>(backend)) { }
+		public List(IBlock<T> backend) :	this(new Wrap.List<T>(backend))	{ }
+		public List(int count, IBlock<T> backend) :	this(new Wrap.List<T>(count, backend)) { }
+		public List(IList<T> backend)
 		{
-			this.data = new Array.List<T>(count);
-		}
-		public List(params T[] items)
-		{
-			this.data = new Array.List<T>(items);
+			this.backend = backend;
 		}
 		#endregion
 		#region IList<T>
-		public int Count { get { return this.data.Count; } }
-		public T this[int index]
+		public IList<T> Add(T item)
 		{
-			get { return this.data[index]; }
-			set { this.data[index] = value; }
-		}
-		public Collection.IList<T> Add(T item)
-		{
-			return this.data.Add(item);
+			return this.backend.Add(item);
 		}
 		public T Remove()
 		{
-			return this.data.Remove();
+			return this.backend.Remove();
 		}
 		public T Remove(int index)
 		{
-			return this.data.Remove(index);
+			return this.backend.Remove(index);
 		}
-		public Collection.IList<T> Insert(int index, T item)
+		public IList<T> Insert(int index, T item)
 		{
-			return this.data.Insert(index, item);
-		}
-		#endregion
-		#region System.Collections.IEnumerable
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return (this.data as System.Collections.IEnumerable).GetEnumerator();
-		}
-		#endregion
-		#region System.Collections.Generic.IEnumerable<T>
-		System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator()
-		{
-			return (this.data as System.Collections.Generic.IEnumerable<T>).GetEnumerator();
-		}
-		#endregion
-		#region System.IEquatable<Interface.IVector<T>>
-		public bool Equals(IVector<T> other)
-		{
-			return this.data.Equals(other);
-		}
-		#endregion
-		#region System.Object
-		public override bool Equals(object other)
-		{
-			return this.data.Equals(other);
-		}
-		public override int GetHashCode()
-		{
-			return this.data.GetHashCode();
+			return this.backend.Insert(index, item);
 		}
 		#endregion
 	}

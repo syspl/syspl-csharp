@@ -1,4 +1,4 @@
-// Copyright (C) 2010  Simon Mika <simon@mika.se>
+// Copyright (C) 2009  Simon Mika <simon@mika.se>
 //
 // This file is part of Kean.
 //
@@ -16,14 +16,20 @@
 // along with Kean.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Kean.Collection
+namespace Kean.Collection.Abstract
 {
-	public interface IList<T> :
-		IBlock<T>
+	public abstract class Block<T> :
+		CommonBlock<T>,
+		IBlock<T>,
+		IImmutableBlock<T>
 	{
-		IList<T> Add(T item);
-		T Remove();
-		IList<T> Insert(int index, T item);
-		T Remove(int index);
+		public abstract T this[int index] { get; set; }
+
+		protected Block()
+		{ }
+		protected sealed override T Get(int index)
+		{
+			return this[index];
+		}
 	}
 }

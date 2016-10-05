@@ -204,6 +204,35 @@ namespace Kean.Extension
 				if (predicate(element))
 					yield return element;
 		}
+		public static bool CopyTo<T>(this Generic.IEnumerable<T> me, T[] target, int targetOffset = 0, int count = -1, int sourceOffset = 0)
+		{
+			bool result;
+			if (me is IArrayCopyable<T>)
+				result = ((IArrayCopyable<T>)me).CopyTo(target, targetOffset, count, sourceOffset);
+			else
+			{
+				foreach (var element in me)
+				{
+					if (targetOffset >= (count == -1 ? target.Length : count))
+						break;
+					if (sourceOffset > 0)
+						sourceOffset--;
+					else
+						target[targetOffset++] = element;
+				}
+				result = targetOffset > 0;
+			}
+			return result;
+		}
+		/// <summary>
+		/// Extracts an array from <paramref>me</paramref>. Changing the resulting array may break <paramref>me</paramref>.
+		/// </summary>
+		/// <param name="me">Block to extract array from.</param>
+		/// <returns>The content of <paramref>me</paramref> as an array. It may or may not be a copy.</returns>
+		public static T[] AsArray<T>(this Generic.IEnumerable<T> me)
+		{
+			return (me as IAsArray<T>)?.AsArray() ?? me.ToArray();
+		}
 		static T[] ToArrayHelper<T>(this Generic.IEnumerator<T> me, int count)
 		{
 			T[] result;
@@ -217,6 +246,11 @@ namespace Kean.Extension
 				result = new T[count];
 			return result;
 		}
+		/// <summary>
+		/// Copies data of <paramref>me</paramref> into a new array.
+		/// </summary>
+		/// <param name="me">Block to copy data from.</param>
+		/// <returns>A new array containing the data from <paramref>me</paramref>.</returns>
 		public static T[] ToArray<T>(this Generic.IEnumerable<T> me)
 		{
 			return me.GetEnumerator().ToArrayHelper(0);
@@ -226,7 +260,8 @@ namespace Kean.Extension
 			foreach (T element in me)
 				yield return cast(element);
 		}
-		public static T Get<T>(this Generic.IEnumerable<T> me, int index) {
+		public static T Get<T>(this Generic.IEnumerable<T> me, int index)
+		{
 			return me.GetEnumerator().Skip(index).Next();
 		}
 		#region Last
