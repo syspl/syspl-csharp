@@ -366,7 +366,7 @@ namespace Kean.Extension
 			{
 				var meEnumerator = me.GetEnumerator();
 				var otherEnumerator = other.GetEnumerator();
-				result = meEnumerator.MoveNext() ^ otherEnumerator.MoveNext();
+				result = meEnumerator.MoveNext() == otherEnumerator.MoveNext();
 				while (result)
 				{
 					var meMoved = meEnumerator.MoveNext();
@@ -375,7 +375,7 @@ namespace Kean.Extension
 						result = meEnumerator.Current.IsNull() && otherEnumerator.Current.IsNull() || meEnumerator.Current.Equals(otherEnumerator.Current);
 					else
 					{
-						result = meMoved ^ otherMoved;
+						result = meMoved == otherMoved;
 						break;
 					}
 				}
