@@ -17,23 +17,30 @@
 //
 
 using Xunit;
+using Generic = System.Collections.Generic;
 using Kean.Extension;
 
 namespace Kean.Test
 {
 	public class StringExtension
 	{
-		[Fact]
-		public void PercentEncode()
-		{
-			Assert.Equal("string with spaces".PercentEncode(), "string%20with%20spaces");
-			Assert.Equal("string\"with\"".PercentEncode(), "string%22with%22");
+		public static Generic.IEnumerable<object[]> PercentData {
+			get {
+				yield return new object[] { "string with spaces", "string%20with%20spaces" };
+				yield return new object[] { "string\"with\"", "string%22with%22" };
+			}
 		}
-		[Fact]
-		public void PercentDecode()
+		[Theory]
+		[MemberData("PercentData")]
+		public void PercentEncode(string decoded, string encoded)
 		{
-			Assert.Equal("string%20with%20spaces".PercentDecode(), "string with spaces");
-			Assert.Equal("string%22with%22".PercentDecode(), "string\"with\"");
+			Assert.Equal(decoded.PercentEncode(), encoded);
+		}
+		[Theory]
+		[MemberData("PercentData")]
+		public void PercentDecode(string decoded, string encoded)
+		{
+			Assert.Equal(encoded.PercentDecode(), decoded);
 		}
 	}
 }
