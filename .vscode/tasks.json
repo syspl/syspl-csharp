@@ -6,14 +6,14 @@
 	"tasks": [
 		{
 			"taskName": "build",
-			"args": [ "src/SysPL.SyntaxTree" ],
+			"args": [ "src/", "test/" ],
 			"isBuildCommand": true,
 			"showOutput": "silent",
 			"problemMatcher": "$msCompile"
 		},
 		{
 			"taskName": "test",
-			"args": [ "src/SysPL.SyntaxTree.Tests" ],
+			"args": [ "test/" ],
 			"isTestCommand": true,
 			"showOutput": "silent",
 			"problemMatcher": [

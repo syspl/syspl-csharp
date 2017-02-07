@@ -1,2 +1,2 @@
-# syspl
-Compiler for Syspl. The System Programming Language.
+# SysPL
+Compiler for SysPL. SysPL aimes to become a multi-paradigm, object oriented systems programming language without garbage collection. Aiming at combining high programmer productivity with predictable high execution speeds.
