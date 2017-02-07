@@ -18,7 +18,7 @@
 
 using Xunit;
 
-namespace SysPL.SyntaxTree.Tests
+namespace SysPL.SyntaxTree
 {
 	public class BuildTreeTests
 	{
