@@ -20,18 +20,20 @@ using Text = Kean.Text;
 
 namespace SysPL.Tokens
 {
-	public abstract class Operator :
-		Token
+	public abstract class NumberLiteral :
+		Literal
 	{
-		public string Symbol { get; }
-		protected Operator(string symbol, Text.Fragment source) :
+		protected NumberLiteral(Text.Fragment source) :
 			base(source)
 		{
-			this.Symbol = symbol;
 		}
-		public static bool IsOperator(char c)
+		public static bool StartsNumber(char c)
 		{
-			return c == '/' || c == '=' || c == '-' || c == '+' || c == '!' || c == '*' || c == '%' || c == '<' || c == '>' || c == '&' || c == '|' || c == '^' || c == '~' || c == '.' || c == '?' || c == ':';
+			return char.IsDigit(c);
+		}
+		public static bool IsWithinNumber(char c)
+		{
+			return char.IsLetterOrDigit(c) || c == '_' || c == '.';
 		}
 	}
 }

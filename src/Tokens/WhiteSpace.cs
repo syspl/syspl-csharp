@@ -29,5 +29,9 @@ namespace SysPL.Tokens
 		{
 			this.Value = value;
 		}
+		public static bool IsWhiteSpace(char c)
+		{
+			return char.IsWhiteSpace(c);
+		}
 	}
 }

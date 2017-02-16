@@ -21,7 +21,7 @@ using Text = Kean.Text;
 namespace SysPL.Tokens
 {
 	public class IntegerLiteral :
-		Literal
+		NumberLiteral
 	{
 		public readonly long Value;
 		IntegerLiteral(long value, Text.Fragment source) :

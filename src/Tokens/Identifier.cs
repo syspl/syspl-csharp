@@ -28,6 +28,14 @@ namespace SysPL.Tokens
 		{
 			this.Name = name;
 		}
+		public static bool StartsIdentifier(char c)
+		{
+			return char.IsLetter(c) || c == '_';
+		}
+		public static bool IsWithinIdentifier(char c)
+		{
+			return char.IsLetterOrDigit(c) || c == '_';
+		}
 		public static Token Parse(string data, Text.Fragment source)
 		{
 			Token result;

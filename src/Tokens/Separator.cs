@@ -27,6 +27,10 @@ namespace SysPL.Tokens
 			base(source)
 		{
 		}
+		public static bool IsSeparator(char c)
+		{
+			return c == '(' || c == '[' || c == '{' || c == ')' || c == ']' || c == '}' || c == ',' || c == ';';
+		}
 		public static Separator Parse(char data, Text.Fragment source)
 		{
 			Separator result = null;

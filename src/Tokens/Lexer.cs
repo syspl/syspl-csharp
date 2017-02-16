@@ -52,8 +52,8 @@ namespace SysPL.Tokens
 		}
 		Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
 		{
-				while (!tokenizer.Empty)
-					yield return tokenizer.Next();
+			while (!tokenizer.Empty)
+				yield return tokenizer.Next();
 		}
 		#region Static Open
 		public static Lexer Open(IO.ITextReader reader)

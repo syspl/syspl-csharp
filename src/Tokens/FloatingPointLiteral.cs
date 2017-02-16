@@ -21,7 +21,7 @@ using Text = Kean.Text;
 namespace SysPL.Tokens
 {
 	public class FloatingPointLiteral :
-		Literal
+		NumberLiteral
 	{
 		public double Value { get; private set; }
 		FloatingPointLiteral(double value, Text.Fragment source) :
