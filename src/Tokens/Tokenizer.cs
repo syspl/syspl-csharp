@@ -17,7 +17,6 @@
 //
 
 using System;
-using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
 using IO = Kean.IO;
@@ -26,76 +25,68 @@ using Kean.IO.Extension;
 namespace SysPL.Tokens
 {
 	class Tokenizer :
-		Generic.IEnumerable<Tasks.Task<Token>>,
 		IDisposable
 	{
 		IO.ITextReader reader;
+		Token last;
+		public bool Empty { get; private set; }
 		Tokenizer(IO.ITextReader reader)
 		{
 			this.reader = reader;
 		}
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		public async Tasks.Task<Token> Next()
 		{
-			return this.GetEnumerator();
-		}
-
-		public Generic.IEnumerator<Tasks.Task<Token>> GetEnumerator()
-		{
-			this.reader.Next();
-			Token last = null;
-			bool empty = false;
-			Func<Tasks.Task<Token>> getToken = async () =>
+			if (this.last.IsNull())
+				await this.reader.Next(); // only done first time
+			Token result = null;
+			this.Empty = await this.reader.Empty;
+			var mark = this.reader.Mark();
+			if (this.IsWhiteSpace(this.reader.Last)) // White Space
+				result = new WhiteSpace(await this.reader.ReadFromCurrentUntil(c => !this.IsWhiteSpace(c)), mark);
+			else if (this.IsSeparator(this.reader.Last)) // White Space
+			{
+				result = Separator.Parse(this.reader.Last, mark);
+				this.Empty = !(await this.reader.Next());
+			}
+			else if (this.IsOperator(this.reader.Last))
+			{
+				string r = await this.reader.ReadFromCurrentUntil(c => !this.IsOperator(c));
+				if (r == "//")
 				{
-					Token result = null;
-					empty = await this.reader.Empty;
-					var mark = this.reader.Mark();
-					if (this.IsWhiteSpace(this.reader.Last)) // White Space
-						result = last = new WhiteSpace(await this.reader.ReadFromCurrentUntil(c => !this.IsWhiteSpace(c)), mark);
-					else if (this.IsSeparator(this.reader.Last)) // White Space
+					result = new Comment(r + this.reader.ReadFromCurrentUntil(c => (c == '\n' || c == '\r')), mark);
+					this.Empty = !(await this.reader.Next());
+				}
+				else if (r == "/*")
+				{
+					int depth = 0;
+					char previous = '\0';
+					result = new Comment(r + this.reader.ReadFromCurrentUntil(c =>
 					{
-						result = last = Separator.Parse(this.reader.Last, mark);
-						empty = !(await this.reader.Next());
-					}
-					else if (this.IsOperator(this.reader.Last))
-					{
-						string r = await this.reader.ReadFromCurrentUntil(c => !this.IsOperator(c));
-						if (r == "//")
-						{
-							result = new Comment(r + this.reader.ReadFromCurrentUntil(c => (c == '\n' || c == '\r')), mark);
-							empty = !(await this.reader.Next());
-						}
-						else if (r == "/*")
-						{
-							int depth = 0;
-							char previous = '\0';
-							result = new Comment(r + this.reader.ReadFromCurrentUntil(c =>
-							{
-								if (previous == '/' && c == '*')
-									depth++;
-								return previous == '*' && (previous = c) == '/' && depth-- == 0;
-							}) + "/", mark);
-							empty = !(await this.reader.Next());
-						}
-						else
-							result = last =
-								last is WhiteSpace && !(this.IsSeparator(this.reader.Last) || this.IsWhiteSpace(this.reader.Last)) ? (Operator)new PrefixOperator(r, mark) :
-								!(last is WhiteSpace) && (this.IsSeparator(this.reader.Last) || this.IsWhiteSpace(this.reader.Last) || this.reader.Last == '.') ? (Operator)new PostfixOperator(r, mark) :
-								new InfixOperator(r, mark);
-					}
-					else if (this.StartsNumber(this.reader.Last))
-					{
-						bool floatingPoint = false;
-						string r = await this.reader.ReadFromCurrentUntil(c => !((floatingPoint = c == '.') || this.IsWithinNumber(c)));
-						result = last = floatingPoint ? (Literal)FloatingPointLiteral.Parse(r, mark) : IntegerLiteral.Parse(r, mark);
-					}
-					else if (this.StartsIdentifier(this.reader.Last)) // Keyword, Identifier, Boolean Literal or Null Literal
-						result = last = Identifier.Parse(await this.reader.ReadFromCurrentUntil(c => !this.IsWithinIdentifier(c)), mark);
-					else
-						new Exception.LexicalError("a valid token", "invalid character (\"" + this.reader.Last + "\" " + ((int)this.reader.Last).ToString("x") + ")", mark).Throw();
-					return result;
-				};
-			while (!empty)
-				yield return getToken();
+						if (previous == '/' && c == '*')
+							depth++;
+						return previous == '*' && (previous = c) == '/' && depth-- == 0;
+					}) + "/", mark);
+					this.Empty = !(await this.reader.Next());
+				}
+				else
+					result =
+						this.last is WhiteSpace && !(this.IsSeparator(this.reader.Last) || this.IsWhiteSpace(this.reader.Last)) ? (Operator)new PrefixOperator(r, mark) :
+						!(this.last is WhiteSpace) && (this.IsSeparator(this.reader.Last) || this.IsWhiteSpace(this.reader.Last) || this.reader.Last == '.') ? (Operator)new PostfixOperator(r, mark) :
+						new InfixOperator(r, mark);
+			}
+			else if (this.StartsNumber(this.reader.Last))
+			{
+				bool floatingPoint = false;
+				string r = await this.reader.ReadFromCurrentUntil(c => !((floatingPoint = c == '.') || this.IsWithinNumber(c)));
+				result = floatingPoint ? (Literal)FloatingPointLiteral.Parse(r, mark) : IntegerLiteral.Parse(r, mark);
+			}
+			else if (this.StartsIdentifier(this.reader.Last)) // Keyword, Identifier, Boolean Literal or Null Literal
+				result = Identifier.Parse(await this.reader.ReadFromCurrentUntil(c => !this.IsWithinIdentifier(c)), mark);
+			else
+				new Exception.LexicalError("a valid token", "invalid character (\"" + this.reader.Last + "\" " + ((int)this.reader.Last).ToString("x") + ")", mark).Throw();
+			if (result.NotNull())
+				this.last = result;
+			return result;
 		}
 		bool IsWhiteSpace(char c)
 		{
