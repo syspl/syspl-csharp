@@ -1,4 +1,4 @@
-// Copyright (C) 2016  Simon Mika <simon@mika.se>
+// Copyright (C) 2014, 2016, 2017  Simon Mika <simon@mika.se>
 //
 // This file is part of SysPL.
 //
@@ -16,9 +16,35 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class Statement : Node
+	public abstract class Statement :
+		Node
 	{
+		public Statement(Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
+		{
+		}
+		#region Static Parse
+		internal static Generic.IEnumerable<Tasks.Task<Statement>> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			Tasks.Task<Statement> result;
+			while (tokens.NotNull() && (result = Statement.ParseNext(tokens)).NotNull())
+				yield return result;
+		}
+		static async Tasks.Task<Statement> ParseNext(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return
+				(Statement)await VariableDeclaration.Parse(tokens) ??
+//				await FunctionDeclaration.Parse(tokens) ??
+//				await StructureDeclaration.Parse(tokens) ??
+//				await ClassDeclaration.Parse(tokens) ??
+				await Expression.Parse(tokens);
+		}
+		#endregion
 	}
 }

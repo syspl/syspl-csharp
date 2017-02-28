@@ -23,46 +23,22 @@ using IO = Kean.IO;
 
 namespace SysPL.Tokens
 {
-	public class Lexer
+	public static class Lexer
 	{
-		Token current;
-		public Token Current
+		static Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
 		{
-			get { return this.current; }
-			private set
-			{
-				if (this.current.NotNull())
-					this.Last = this.current;
-				this.current = value;
-			}
-		}
-		public Token Last { get; private set; }
-		Generic.IEnumerator<Tasks.Task<Token>> backend;
-		public bool Empty { get { return this.Current.IsNull(); } }
-		public async Tasks.Task<Token> Next()
-		{
-			Token result = this.Current = (this.backend.MoveNext() ? await this.backend.Current : null);
-			if (result is WhiteSpace || result is Comment)
-				result = await this.Next();
-			return result;
-		}
-		Lexer(Tokenizer tokenizer)
-		{
-			this.backend = this.CreateEnumerator(tokenizer);
-		}
-		Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
-		{
-			while (!tokenizer.Empty)
-				yield return tokenizer.Next();
+			if (tokenizer.NotNull())
+				while (!tokenizer.Empty)
+					yield return tokenizer.Next();
 		}
 		#region Static Open
-		public static Lexer Open(IO.ITextReader reader)
+		public static Generic.IEnumerator<Tasks.Task<Token>> Open(IO.ITextReader reader)
 		{
 			return Lexer.Open(Tokenizer.Open(reader));
 		}
-		static Lexer Open(Tokenizer tokenizer)
+		static Generic.IEnumerator<Tasks.Task<Token>> Open(Tokenizer tokenizer)
 		{
-			return tokenizer.NotNull() ? new Lexer(tokenizer) : null;
+			return Lexer.CreateEnumerator(tokenizer).FilterTasks(token => !(token is WhiteSpace || token is Comment));
 		}
 		#endregion
 	}

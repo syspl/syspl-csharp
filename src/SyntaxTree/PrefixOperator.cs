@@ -16,18 +16,21 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
 	public class PrefixOperator : Operator
 	{
 		public override int Precedence { get { return 250; } }
 		public Expression Expression { get; }
-		public PrefixOperator(string symbol, Expression expression, Type.Expression type) : base(symbol, type)
+		public PrefixOperator(string symbol, Expression expression, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(symbol, type, source)
 		{
 			this.Expression = expression;
 		}
 		#region Static Create
-		public static PrefixOperator Create(string symbol, Expression expression, Type.Expression type = null)
+		public static PrefixOperator Create(string symbol, Expression expression, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null)
 		{
 			PrefixOperator result;
 			switch (symbol)
@@ -41,7 +44,7 @@ namespace SysPL.SyntaxTree
 				case "~":
 				case "+":
 				case "-":
-					result = new PrefixOperator(symbol, expression, type);
+					result = new PrefixOperator(symbol, expression, type, source);
 					break;
 			}
 			return result;

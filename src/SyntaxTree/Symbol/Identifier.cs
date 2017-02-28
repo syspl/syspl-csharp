@@ -16,15 +16,27 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree.Symbol
 {
 	public class Identifier : Expression
 	{
 		public string Name { get; }
-		public Identifier(string name, Type.Expression type = null) :
-			base(type)
+		public Identifier(string name, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(type, source)
 		{
 			this.Name = name;
+		}
+		Identifier(Tokens.Identifier source, Type.Expression type = null) :
+			this(source.Name, type, new [] { source })
+		{}
+		internal static async new Tasks.Task<Identifier> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			var current = await tokens.Current as Tokens.Identifier;
+			return current.NotNull() ? new Identifier(current, tokens.MoveNext() ? await Type.Expression.TryParse(tokens) : null) : null;
 		}
 	}
 }

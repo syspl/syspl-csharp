@@ -23,8 +23,10 @@ namespace SysPL.SyntaxTree
 	public class StructureDeclaration : TypeDeclaration
 	{
 		public Generic.IEnumerable<Statement> Statements { get; }
-		public StructureDeclaration(Type.Identifier name) : base(name)
+		public StructureDeclaration(Type.Identifier name, Generic.IEnumerable<Statement> statements, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(name, source)
 		{
+			this.Statements = statements;
 		}
 	}
 }

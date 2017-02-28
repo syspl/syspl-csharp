@@ -16,13 +16,25 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree.Symbol
 {
-	public class Discard : Expression
+	public class Discard :
+		Expression
 	{
 		public Discard(Type.Expression type = null) :
-			base(type)
+			this(null, type)
+		{}
+		public Discard(Tokens.Identifier source, Type.Expression type = null) :
+			base(type, new [] { source })
+		{}
+		internal static async new Tasks.Task<Discard> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
+			var current = await tokens.Current as Tokens.Identifier;
+			return current.NotNull() && current.Name == "_" ? new Discard(current, tokens.MoveNext() ? await Type.Expression.TryParse(tokens) : null) : null;
 		}
 	}
 }

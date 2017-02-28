@@ -17,15 +17,28 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
 
 namespace SysPL.SyntaxTree
 {
-	public class File : Node
+	public class File :
+		Node
 	{
 		public Generic.IEnumerable<Statement> Statements { get; }
-		public File(Generic.IEnumerable<Statement> statements) {
+		public File(Generic.IEnumerable<Statement> statements, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(source)
+		{
 			this.Statements = statements;
-		 }
-		public File(params Statement[] statements) : this((Generic.IEnumerable<Statement>)statements) { }
+		}
+		public File(params Statement[] statements) :
+			this((Generic.IEnumerable<Statement>)statements)
+		{ }
+		#region Static Parse
+		public static async Tasks.Task<File> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return new File(await Statement.Parse(tokens).WhenAll());
+		}
+		#endregion
 	}
 }

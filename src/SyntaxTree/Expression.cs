@@ -16,15 +16,23 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class Expression : Statement
+	public abstract class Expression :
+		Statement
 	{
 		public abstract int Precedence { get; }
-		public Type.Expression Type { get; }
-		protected Expression(Type.Expression type)
+		public Type.Expression AssignedType { get; }
+		protected Expression(Type.Expression assignedType, Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
 		{
-			this.Type = type;
+			this.AssignedType = assignedType;		}
+		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return null;
 		}
 	}
 }

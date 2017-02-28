@@ -16,14 +16,32 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+
 namespace SysPL.SyntaxTree.Symbol
 {
-	public abstract class Expression
+	public abstract class Expression :
+		Node
 	{
-		public Type.Expression Type { get; }
-		protected Expression(Type.Expression type)
+		public Type.Expression AssignedType { get; }
+		protected Expression(Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
 		{
-			this.Type = type;
+			this.AssignedType = type;
 		}
+		#region Static Parse
+		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return await Expression.TryParse(tokens) ??
+				new Exception.SyntaxError("Identifier, Tuple Pattern or Wildcard", tokens).Throw<Expression>();
+		}
+		internal static async Tasks.Task<Expression> TryParse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return await Discard.Parse(tokens) ??
+				await Identifier.Parse(tokens) ??
+				await Tuple.Parse(tokens);
+		}
+		#endregion
 	}
 }

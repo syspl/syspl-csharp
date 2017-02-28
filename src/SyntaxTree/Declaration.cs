@@ -16,11 +16,15 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class Declaration : Statement
+	public abstract class Declaration :
+		Statement
 	{
-		protected Declaration()
+		protected Declaration(Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
 		{
 		}
 	}

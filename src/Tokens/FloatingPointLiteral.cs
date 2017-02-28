@@ -23,7 +23,7 @@ namespace SysPL.Tokens
 	public class FloatingPointLiteral :
 		NumberLiteral
 	{
-		public double Value { get; private set; }
+		public double Value { get; }
 		FloatingPointLiteral(double value, Text.Fragment source) :
 			base(source)
 		{

@@ -15,13 +15,17 @@
 // You should have received a copy of the GNU General Public License
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
 	public abstract class Literal : Expression
 	{
 		public override int Precedence { get { return 500; } }
 		public string Raw { get; }
-		protected Literal(string raw, Type.Expression type) : base(type)
+		protected Literal(string raw, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(type, source)
 		{
 			this.Raw = raw;
 		}

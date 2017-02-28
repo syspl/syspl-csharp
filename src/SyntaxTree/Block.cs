@@ -21,18 +21,35 @@ using Generic = System.Collections.Generic;
 
 namespace SysPL.SyntaxTree
 {
-	public class Block : Expression
+	public class Block :
+		Expression
 	{
 		public override int Precedence { get { return int.MaxValue; } }
 		public Generic.IEnumerable<Statement> Statements { get; }
-		public Block(Generic.IEnumerable<Statement> statements) : this(statements.ToArray()) { }
-		public Block(params Statement[] statements) : base(Block.GetType(statements.Last()))
+		public Block(params Statement[] statements) :
+			this((Generic.IEnumerable<Statement>)statements)
+		{
+		}
+		public Block(Generic.IEnumerable<Statement> statements, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(Block.GetType(statements.Last()), source)
 		{
 			this.Statements = statements;
 		}
 		static Type.Expression GetType(Statement statement)
 		{
-			return statement is Expression ? (statement as Expression).Type : new Type.Identifier("void");
+			return statement is Expression ? (statement as Expression).AssignedType : new Type.Identifier("void");
 		}
-	}
+/*		internal static async Generic.IEnumerable<Statement> ParseCodeBlock(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			var current = await tokens.Current;
+			if (!(current is Tokens.LeftBrace))
+				new Exception.SyntaxError("function body starting with \"{\"", tokens).Throw();
+			await tokens.Next();
+			foreach (var result in Statement.ParseStatements(tokens))
+				yield return result;
+			if (!(await tokens.Current is Tokens.RightBrace))
+				new Exception.SyntaxError("function body ending with \"}\"", tokens).Throw();
+			await tokens.Next();
+		}
+*/	}
 }

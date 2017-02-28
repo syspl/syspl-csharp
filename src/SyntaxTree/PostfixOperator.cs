@@ -16,18 +16,22 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public class PostfixOperator : Operator
+	public class PostfixOperator :
+		Operator
 	{
 		public override int Precedence { get { return 250; } }
 		public Expression Expression { get; }
-		public PostfixOperator(Expression expression, string symbol, Type.Expression type) : base(symbol, type)
+		public PostfixOperator(Expression expression, string symbol, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(symbol, type, source)
 		{
 			this.Expression = expression;
 		}
 		#region Static Create
-		public static PostfixOperator Create(Expression expression, string symbol, Type.Expression type = null)
+		public static PostfixOperator Create(Expression expression, string symbol, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null)
 		{
 			PostfixOperator result;
 			switch (symbol)
@@ -37,7 +41,7 @@ namespace SysPL.SyntaxTree
 					break;
 				case "++":
 				case "--":
-					result = new PostfixOperator(expression, symbol, type);
+					result = new PostfixOperator(expression, symbol, type, source);
 					break;
 			}
 			return result;

@@ -17,6 +17,7 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
 using Kean.Extension;
 
 namespace SysPL.SyntaxTree.Type
@@ -25,8 +26,10 @@ namespace SysPL.SyntaxTree.Type
 	{
 		public override int Precedence { get { return 30; } }
 		public Generic.IEnumerable<Expression> Elements { get; }
-		public Tuple(params Expression[] elements) : this((Generic.IEnumerable<Expression>)elements) { }
-		public Tuple(Generic.IEnumerable<Expression> elements)
+		public Tuple(params Expression[] elements) :
+			this((Generic.IEnumerable<Expression>)elements) { }
+		public Tuple(Generic.IEnumerable<Expression> elements, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(source)
 		{
 			this.Elements = elements;
 		}
@@ -40,7 +43,30 @@ namespace SysPL.SyntaxTree.Type
 		}
 		public override string ToString()
 		{
-			return this.Elements.Map(element => element.ToString(this.Precedence)).Join(" * ");
+			return "(" + this.Elements.Map(element => element.ToString(this.Precedence)).Join(", ") + ")";
 		}
+		#region Static Parse
+		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			Expression result = null;
+			if (!(await tokens.Next() is Tokens.RightParenthesis))
+			{
+				Generic.IEnumerable<Expression> elements = null;
+				Generic.IEnumerable<Tokens.Token> source = new[] { await tokens.Current };
+				do
+				{
+					elements = elements.Append(await Expression.Parse(tokens));
+					source = source.Append(await tokens.Current);
+				}
+				while (await tokens.Current is Tokens.Comma && tokens.MoveNext());
+				if (!(await tokens.Current is Tokens.RightParenthesis))
+					new Exception.SyntaxError("right parenthesis \")\"", tokens).Throw();
+				source = source.Append(await tokens.Current);
+				result = new Tuple(elements, source);
+				tokens.MoveNext();
+			}
+			return result;
+		}
+		#endregion
 	}
 }

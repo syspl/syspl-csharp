@@ -15,12 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
 	public abstract class InfixOperator : Operator
 	{
 		public abstract Associativity Associativity { get; }
-		protected InfixOperator(string symbol, Type.Expression type) : base(symbol, type)
+		protected InfixOperator(string symbol, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(symbol, type, source)
 		{
 		}
 	}

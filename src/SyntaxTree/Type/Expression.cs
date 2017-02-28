@@ -17,15 +17,20 @@
 //
 
 using System;
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
 using Kean.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
 	public abstract class Expression :
-			IEquatable<Expression>
+		Node,
+		IEquatable<Expression>
 	{
 		public abstract int Precedence { get; }
-
+		protected Expression(Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
+		{ }
 		public abstract bool Equals(Expression other);
 		// override object.Equals
 		public override bool Equals(object other)
@@ -49,6 +54,14 @@ namespace SysPL.SyntaxTree.Type
 			if (this.Precedence < parentPrecedance)
 				result = "(" + result + ")";
 			return result;
+		}
+		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return (await Function.Parse((await Tuple.Parse(tokens)) ?? (await Identifier.Parse(tokens)), tokens)) ?? new Exception.SyntaxError("type expression", tokens).Throw<Expression>();
+		}
+		internal static async Tasks.Task<Expression> TryParse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			return (await tokens.Current).Is<Tokens.Operator>(token => token.Symbol == ":") && tokens.MoveNext() ? await Expression.Parse(tokens) : null;
 		}
 	}
 }

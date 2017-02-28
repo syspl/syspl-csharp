@@ -16,9 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
 	public abstract class Node
 	{
+		Generic.IEnumerable<Tokens.Token> Source { get; }
+		protected Node(Generic.IEnumerable<Tokens.Token> source)
+		{
+			this.Source = source;
+		}
 	}
 }

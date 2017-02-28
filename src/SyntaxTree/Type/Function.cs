@@ -16,6 +16,10 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree.Type
 {
 	public class Function : Expression
@@ -23,7 +27,8 @@ namespace SysPL.SyntaxTree.Type
 		public override int Precedence { get { return 10; } }
 		public Expression Argument { get; }
 		public Expression Result { get; }
-		public Function(Expression argument, Expression result)
+		public Function(Expression argument, Expression result, Tokens.Operator source) :
+			base(new [] { source })
 		{
 			this.Argument = argument;
 			this.Result = result;
@@ -34,7 +39,13 @@ namespace SysPL.SyntaxTree.Type
 		}
 		public override string ToString()
 		{
-			return this.Argument.ToString(this.Precedence) + " -> " + this.Result.ToString(this.Precedence);
+			return this.Argument.ToString(this.Precedence) + " => " + this.Result.ToString(this.Precedence);
+		}
+		internal static async Tasks.Task<Expression> Parse(Expression argument, Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			var current = await tokens.Current as Tokens.Operator;
+			tokens.MoveNext();
+			return argument.NotNull() && current.Symbol == "=>" ? new Function(argument, await Expression.Parse(tokens), current) : argument;
 		}
 	}
 }

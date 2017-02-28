@@ -16,12 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class Operator : Expression
+	public abstract class Operator :
+		Expression
 	{
 		public string Symbol { get; }
-		protected Operator(string symbol, Type.Expression type) : base(type)
+		protected Operator(string symbol, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+			base(type, source)
 		{
 			this.Symbol = symbol;
 		}

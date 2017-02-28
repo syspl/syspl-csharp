@@ -16,13 +16,17 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public abstract class SymbolDeclaration : Declaration
+	public abstract class SymbolDeclaration :
+		Declaration
 	{
  		public Symbol.Expression Symbol { get; }
 		public bool Immutable { get; }
-		protected SymbolDeclaration(Symbol.Expression symbol, bool immutable)
+		protected SymbolDeclaration(Symbol.Expression symbol, bool immutable, Generic.IEnumerable<Tokens.Token> source) :
+			base(source)
 		{
 			this.Symbol = symbol;
 			this.Immutable = immutable;

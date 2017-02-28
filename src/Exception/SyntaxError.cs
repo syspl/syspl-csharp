@@ -16,6 +16,9 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
 using Error = Kean.Error;
 using Text = Kean.Text;
 
@@ -27,11 +30,15 @@ namespace SysPL.Exception
 		public string Expected { get; }
 		public string Found { get; }
 		public new Text.Fragment Source { get; }
-		protected internal SyntaxError(string expected, string found, Text.Fragment source) :
+		internal SyntaxError(string expected, Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens) :
+			this(expected, "\"" + tokens.Current?.WaitFor()?.Source ?? "nothing" + "\"", tokens.Current?.WaitFor()?.Source)
+		{
+		}
+		internal SyntaxError(string expected, string found, Text.Fragment source) :
 			this(null, expected, found, source)
 		{
 		}
-		protected internal SyntaxError(System.Exception innerException, string expected, string found, Text.Fragment source) :
+		internal SyntaxError(System.Exception innerException, string expected, string found, Text.Fragment source) :
 			base(innerException, Error.Level.Critical, "Syntax Error", "Expected {0}, but found {1}, at {2}.", expected, found, source.ToString())
 		{
 			this.Expected = expected;

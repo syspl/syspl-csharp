@@ -16,13 +16,22 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree.Type
 {
-	public class Identifier : Expression
+	public class Identifier :
+		Expression
 	{
 		public override int Precedence { get { return 50; } }
 		public string Name { get; }
-		public Identifier(string name)
+		public Identifier(Tokens.Identifier source) :
+			this(source.Name, source)
+		{ }
+		public Identifier(string name, Tokens.Identifier source = null) :
+			base(new [] { source })
 		{
 			this.Name = name;
 		}
@@ -37,6 +46,12 @@ namespace SysPL.SyntaxTree.Type
 		public override string ToString()
 		{
 			return this.Name;
+		}
+		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			var current = await tokens.Current as Tokens.Identifier;
+			tokens.MoveNext();
+			return current.NotNull() ? new Identifier(current) : null;
 		}
 	}
 }

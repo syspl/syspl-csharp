@@ -16,12 +16,17 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree {
-	public class Function : Expression {
+	public class Function :
+		Expression
+	{
 		public override int Precedence { get { return 500; } }
 		public Symbol.Expression Arguments { get; }
 		public Expression Expression { get; }
-		public Function(Symbol.Expression arguments, Expression expression, Type.Expression type = null) : base(type)
+		public Function(Symbol.Expression arguments, Expression expression, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(type, source)
 		{
 			this.Arguments = arguments;
 			this.Expression = expression;

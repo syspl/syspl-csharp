@@ -16,12 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public class IntegerLiteral : Literal
+	public class IntegerLiteral :
+		Literal
 	{
-		public long Value { get; set; }
-		public IntegerLiteral(long value, string raw, Type.Expression type = null) : base(raw, type)
+		public long Value { get; }
+		public IntegerLiteral(long value, string raw, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(raw, type, source)
 		{
 			this.Value = value;
 		}

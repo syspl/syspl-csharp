@@ -16,13 +16,44 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+
 namespace SysPL.SyntaxTree
 {
-	public class VariableDeclaration : SymbolDeclaration
+	public class VariableDeclaration :
+		SymbolDeclaration
 	{
-		public VariableDeclaration(Symbol.Expression symbol) : this(symbol, false) { }
-		protected VariableDeclaration(Symbol.Expression symbol, bool immutable) : base(symbol, immutable)
+		public VariableDeclaration(Symbol.Expression symbol) : this(symbol, false, null) { }
+		protected VariableDeclaration(Symbol.Expression symbol, bool immutable, Generic.IEnumerable<Tokens.Token> source) :
+			base(symbol, immutable, source)
 		{
 		}
+		#region Static Parse
+		internal static new async Tasks.Task<VariableDeclaration> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		{
+			var current = await tokens.Current as Tokens.Keyword;
+			VariableDeclaration result = null;
+			bool immutable;
+			if (current.NotNull() && ((immutable = current.Name == Tokens.Keywords.Let) || current.Name == Tokens.Keywords.Var))
+			{
+				Generic.IEnumerable<Tokens.Token> source = new[] { current };
+				if (!tokens.MoveNext())
+					new Exception.SyntaxError("symbol expression", tokens).Throw();
+				var symbol = await SyntaxTree.Symbol.Expression.Parse(tokens);
+				if ((await tokens.Current).Is<Tokens.InfixOperator>(t => t.Symbol == "="))
+				{
+					source = source.Append(await tokens.Current);
+					if (!tokens.MoveNext())
+						new Exception.SyntaxError("expression", tokens).Throw();
+					result = new VariableDefinition(symbol, await Expression.Parse(tokens), immutable, source);
+				}
+				else
+					result = new VariableDeclaration(symbol, immutable, source);
+			}
+			return result;
+		}
+		#endregion
 	}
 }

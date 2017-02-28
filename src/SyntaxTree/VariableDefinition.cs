@@ -16,12 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public class VariableDefinition : VariableDeclaration
+	public class VariableDefinition :
+		VariableDeclaration
 	{
 		public Expression Value { get; }
-		public VariableDefinition(Symbol.Expression symbol, Expression value, bool immutable = false) : base(symbol, immutable)
+		public VariableDefinition(Symbol.Expression symbol, Expression value, bool immutable = false, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(symbol, immutable, source)
 		{
 			this.Value = value;
 		}

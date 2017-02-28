@@ -16,12 +16,16 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Generic = System.Collections.Generic;
+
 namespace SysPL.SyntaxTree
 {
-	public class BooleanLiteral : Literal
+	public class BooleanLiteral :
+		Literal
 	{
-		public bool Value { get; set; }
-		public BooleanLiteral(bool value, string raw, Type.Expression type = null) : base(raw, type)
+		public bool Value { get; }
+		public BooleanLiteral(bool value, string raw, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(raw, type, source)
 		{
 			this.Value = value;
 		}
