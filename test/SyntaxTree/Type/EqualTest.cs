@@ -47,5 +47,10 @@ namespace SysPL.SyntaxTree.Type
 		{
 			Assert.Equal(expected, actual);
 		}
+		[Theory, MemberData("NotEqualData")]
+		public void NotEqual(Expression expected, Expression actual)
+		{
+			Assert.NotEqual(expected, actual);
+		}
 	}
 }

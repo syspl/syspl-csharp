@@ -22,7 +22,8 @@ using Kean.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
-	public class Tuple : Expression
+	public class Tuple :
+		Expression
 	{
 		public override int Precedence { get { return 30; } }
 		public Generic.IEnumerable<Expression> Elements { get; }
