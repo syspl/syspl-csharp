@@ -55,6 +55,11 @@ namespace SysPL.SyntaxTree.Type
 				result = "(" + result + ")";
 			return result;
 		}
+		#region Static Parse
+		public static Expression Parse(string data)
+		{
+			return Expression.Parse(Tokens.Lexer.FromString(data)).WaitFor();
+		}
 		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
 			return (await Function.Parse((await Tuple.Parse(tokens)) ?? (await Identifier.Parse(tokens)), tokens)) ?? new Exception.SyntaxError("type expression", tokens).Throw<Expression>();
@@ -63,5 +68,6 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return (await tokens.Current).Is<Tokens.Operator>(token => token.Symbol == ":") && tokens.MoveNext() ? await Expression.Parse(tokens) : null;
 		}
+		#endregion
 	}
 }
