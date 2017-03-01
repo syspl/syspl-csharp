@@ -27,7 +27,7 @@ namespace SysPL.SyntaxTree.Type
 			get {
 				yield return new object[] { "int", new Identifier("int") };
 				yield return new object[] { "string", new Identifier("string") };
-				yield return new object[] { "string * int", new Tuple(new Identifier("string"), new Identifier("int")) };
+				yield return new object[] { "(string, int)", new Tuple(new Identifier("string"), new Identifier("int")) };
 			}
 		}
 		[Theory, MemberData("Data")]
@@ -39,7 +39,7 @@ namespace SysPL.SyntaxTree.Type
 		public void Parse(string actual, Expression expected)
 		{
 // TODO: Is this how we do and test parsing?
-//			Assert.Equal(expected, Expression.Parse(actual));
+			Assert.Equal(expected, Expression.Parse(actual));
 		}
 	}
 }
