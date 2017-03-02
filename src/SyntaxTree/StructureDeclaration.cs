@@ -16,7 +16,12 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -27,6 +32,17 @@ namespace SysPL.SyntaxTree
 			base(name, source)
 		{
 			this.Statements = statements;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write("struct ") &&
+				await this.Name.Write(indenter) &&
+				await indenter.WriteLine() &&
+				await indenter.WriteLine("{") &&
+				indenter.Increase() &&
+				await indenter.Join(this.Statements.Map(statement => (Func<IO.ITextWriter, Tasks.Task<bool>>)(writer => statement.Write((IO.ITextIndenter)writer))), writer => writer.WriteLine()) &&
+				indenter.Increase() &&
+				await indenter.WriteLine();
 		}
 	}
 }

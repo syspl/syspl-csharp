@@ -16,9 +16,12 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
@@ -42,9 +45,11 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return this.Hash(this.Elements);
 		}
-		public override string ToString()
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
 		{
-			return "(" + this.Elements.Map(element => element.ToString(this.Precedence)).Join(", ") + ")";
+			return await indenter.Write("(") &&
+			await indenter.Join(this.Elements.Map(element => (Func<IO.ITextWriter, Tasks.Task<bool>>)(writer => element.Write(writer as IO.ITextIndenter, this.Precedence))), ", ") &&
+			await indenter.Write(")");
 		}
 		#region Static Parse
 		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)

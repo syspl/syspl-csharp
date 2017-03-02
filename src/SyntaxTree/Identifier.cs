@@ -17,6 +17,9 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -29,6 +32,10 @@ namespace SysPL.SyntaxTree
 			base(type, source)
 		{
 			this.Name = name;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write(this.Name);
 		}
 	}
 }

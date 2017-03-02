@@ -17,6 +17,9 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree {
 	public class Function :
@@ -30,6 +33,12 @@ namespace SysPL.SyntaxTree {
 		{
 			this.Arguments = arguments;
 			this.Expression = expression;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await this.Arguments.Write(indenter) &&
+				await indenter.Write(" => ") &&
+				await this.Expression.Write(indenter);
 		}
 	}
 }

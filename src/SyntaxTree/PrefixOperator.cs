@@ -17,6 +17,9 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -28,6 +31,11 @@ namespace SysPL.SyntaxTree
 			base(symbol, type, source)
 		{
 			this.Expression = expression;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write(this.Symbol) &&
+				await this.Expression.Write(indenter, this.Precedence);
 		}
 		#region Static Create
 		public static PrefixOperator Create(string symbol, Expression expression, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null)

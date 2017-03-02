@@ -19,10 +19,13 @@
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
-	public class Function : Expression
+	public class Function :
+		Expression
 	{
 		public override int Precedence { get { return 10; } }
 		public Expression Argument { get; }
@@ -37,9 +40,9 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return other is Function && this.Argument == ((Function)other).Argument && this.Result == ((Function)other).Result;
 		}
-		public override string ToString()
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
 		{
-			return this.Argument.ToString(this.Precedence) + " => " + this.Result.ToString(this.Precedence);
+			return await this.Argument.Write(indenter, this.Precedence) && await indenter.Write(" => ") && await this.Result.Write(indenter, this.Precedence);
 		}
 		internal static async Tasks.Task<Expression> Parse(Expression argument, Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{

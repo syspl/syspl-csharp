@@ -32,9 +32,9 @@ namespace SysPL.Tokens
 					yield return tokenizer.Next();
 		}
 		#region Static Open
-		public static Generic.IEnumerator<Tasks.Task<Token>> FromString(string content)
+		public static Generic.IEnumerator<Tasks.Task<Token>> Tokenize(string content)
 		{
-			return Lexer.Open(IO.TextReader.FromString(content));
+			return Lexer.Open(IO.TextReader.From(content));
 		}
 		public static Generic.IEnumerator<Tasks.Task<Token>> Open(IO.ITextReader reader)
 		{

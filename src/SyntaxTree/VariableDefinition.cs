@@ -17,6 +17,9 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -28,6 +31,14 @@ namespace SysPL.SyntaxTree
 			base(symbol, immutable, source)
 		{
 			this.Value = value;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write(this.Immutable ? "let " : "var ") &&
+				await this.Symbol.Write(indenter) &&
+				await indenter.Write(" = ") &&
+				await this.Value.Write(indenter) &&
+				await indenter.WriteLine();
 		}
 	}
 }

@@ -17,17 +17,44 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+using Text = Kean.Text;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
 	public class StringLiteral :
 		Literal
 	{
-			public string Value { get; }
-			public StringLiteral(string value, string raw, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
-				base(raw, type, source)
-			{
-				this.Value = value;
-			}
+		public string Value { get; }
+		public string Escaped {
+			get { return this.Value.Fold((c, builder) => {
+				switch (c)
+				{
+					case '\0': builder += "\\0"; break;
+					case '\\': builder += "\\\\"; break;
+					case '\t': builder += "\\t"; break;
+					case '\n': builder += "\\n"; break;
+					case '\r': builder += "\\r"; break;
+					case '"': builder += "\\\""; break;
+					case '\'': builder += "\\'"; break;
+					default: builder += c; break;
+				}
+				return builder;
+			}, new Text.Builder()); }
+		}
+		public StringLiteral(string value, string raw, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
+			base(raw, type, source)
+		{
+			this.Value = value;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write("\"") &&
+				await indenter.Write(this.Escaped) &&
+				await indenter.Write("\"");
+		}
 	}
 }

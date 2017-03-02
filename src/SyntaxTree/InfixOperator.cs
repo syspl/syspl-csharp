@@ -17,15 +17,126 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
-	public abstract class InfixOperator : Operator
+	public class InfixOperator :
+		Operator
 	{
-		public abstract Associativity Associativity { get; }
-		protected InfixOperator(string symbol, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
+		public override int Precedence { get; }
+		public Associativity Associativity { get; }
+		public Expression Left { get; }
+		public Expression Right { get; }
+		protected InfixOperator(Expression left, string symbol, Expression right, Type.Expression type, Generic.IEnumerable<Tokens.Token> source) :
 			base(symbol, type, source)
 		{
+			this.Left = left;
+			this.Right = right;
+			switch (symbol)
+			{
+				default:
+					break;
+			// Resolving
+				case ".":
+				case ".?":
+					this.Precedence = 300;
+					this.Associativity = Associativity.None;
+					break;
+			// Bitwise Shifting
+				case "<<":
+				case ">>":
+					this.Precedence = 160;
+					this.Associativity = Associativity.None;
+					break;
+			// Multiplicative
+				case "*":
+				case "/":
+				case "%":
+				case "&*":
+				case "&":
+					this.Precedence = 150;
+					this.Associativity = Associativity.Left;
+					break;
+			// Additive
+				case "+":
+				case "-":
+				case "&+":
+				case "&-":
+				case "|":
+				case "^":
+					this.Precedence = 140;
+					this.Associativity = Associativity.Left;
+					break;
+			// Range Formation
+				case "..<":
+				case "...":
+					this.Precedence = 135;
+					this.Associativity = Associativity.None;
+					break;
+			// Casting TODO: Letters in operator? Does currently not work!
+				case "is":
+				case "as":
+				case "as?":
+				case "as!":
+					this.Precedence = 132;
+					this.Associativity = Associativity.Left;
+					break;
+			// Null coalescing
+				case "??":
+					this.Precedence = 132; // TODO: Correct precedence for ?? operator?
+					this.Associativity = Associativity.Right;
+					break;
+			// Comparative
+				case "<":
+				case "<=":
+				case ">":
+				case ">=":
+				case "==":
+				case "!=":
+				case "===":
+				case "!==":
+				case "~=":
+					this.Precedence = 130;
+					this.Associativity = Associativity.None;
+					break;
+			// Conjuctive
+				case "&&":
+					this.Precedence = 120;
+					this.Associativity = Associativity.Left;
+					break;
+			// Disjunctive
+				case "||":
+					this.Precedence = 110;
+					this.Associativity = Associativity.Left;
+					break;
+			// Assigning
+				case "=":
+				case "*=":
+				case "/=":
+				case "+=":
+				case "-=":
+				case "<<=":
+				case ">>=":
+				case "&=":
+				case "^=":
+				case "|=":
+				case "&&=":
+				case "||=":
+					this.Precedence = 90;
+					this.Associativity = Associativity.Right;
+					break;
+			}
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await this.Left.Write(indenter, this.Precedence + this.Associativity == Associativity.Right ? -1 : 0) &&
+				(this.Precedence < 300 || await indenter.Write(" ")) &&
+				await indenter.Write(this.Symbol) &&
+				(this.Precedence < 300 || await indenter.Write(" ")) &&
+				await this.Right.Write(indenter, this.Precedence + this.Associativity == Associativity.Left ? -1 : 0);
 		}
 	}
 }

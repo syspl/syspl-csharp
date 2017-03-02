@@ -17,17 +17,33 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
 	public class FunctionDeclaration :
 		SymbolDeclaration
 	{
+		public Type.Expression ReturnType { get; }
 		public Function Function { get; }
-		public FunctionDeclaration(Symbol.Identifier symbol, Function function, Generic.IEnumerable<Tokens.Token> source = null) :
+		public FunctionDeclaration(Symbol.Identifier symbol, Type.Expression returnType, Function function, Generic.IEnumerable<Tokens.Token> source = null) :
 			base(symbol, true, source)
 		{
+			this.ReturnType = returnType;
 			this.Function = function;
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write("func ") &&
+				await this.Symbol.Write(indenter) &&
+				await this.Function.Arguments.Write(indenter) &&
+				(this.ReturnType.IsNull() || await indenter.Write(" : ") && await this.ReturnType.Write(indenter)) &&
+				this.Function.Expression is Block ? await this.Function.Expression.Write(indenter) :
+				this.Function.Expression.IsNull() ? await indenter.Write(" { }") :
+				await indenter.Write(" { ") && indenter.Increase() && await this.Function.Expression.Write(indenter) && indenter.Decrease() && await indenter.WriteLine(" }");
 		}
 	}
 }

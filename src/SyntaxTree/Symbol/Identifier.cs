@@ -19,10 +19,13 @@
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Symbol
 {
-	public class Identifier : Expression
+	public class Identifier :
+		Expression
 	{
 		public string Name { get; }
 		public Identifier(string name, Type.Expression type = null, Generic.IEnumerable<Tokens.Token> source = null) :
@@ -33,6 +36,10 @@ namespace SysPL.SyntaxTree.Symbol
 		Identifier(Tokens.Identifier source, Type.Expression type = null) :
 			this(source.Name, type, new [] { source })
 		{}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write(this.Name);
+		}
 		internal static async new Tasks.Task<Identifier> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
 			var current = await tokens.Current as Tokens.Identifier;

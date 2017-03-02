@@ -19,6 +19,8 @@
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -29,6 +31,10 @@ namespace SysPL.SyntaxTree
 		protected VariableDeclaration(Symbol.Expression symbol, bool immutable, Generic.IEnumerable<Tokens.Token> source) :
 			base(symbol, immutable, source)
 		{
+		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write("var ") && await this.Symbol.Write(indenter) && await indenter.WriteLine();
 		}
 		#region Static Parse
 		internal static new async Tasks.Task<VariableDeclaration> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)

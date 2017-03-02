@@ -18,6 +18,8 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree
 {
@@ -29,7 +31,13 @@ namespace SysPL.SyntaxTree
 		protected Expression(Type.Expression assignedType, Generic.IEnumerable<Tokens.Token> source) :
 			base(source)
 		{
-			this.AssignedType = assignedType;		}
+			this.AssignedType = assignedType;
+		}
+		public async Tasks.Task<bool> Write(IO.ITextIndenter indenter, int parentPrecedance) {
+			return this.Precedence < parentPrecedance ?
+				await indenter.Write("(") && await this.Write(indenter) && await indenter.Write(")") :
+				await this.Write(indenter);
+		}
 		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
 			return null;

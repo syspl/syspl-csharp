@@ -20,6 +20,8 @@ using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
@@ -49,16 +51,15 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return !(left == right);
 		}
-		public string ToString(int parentPrecedance) {
-			var result = this.ToString();
-			if (this.Precedence < parentPrecedance)
-				result = "(" + result + ")";
-			return result;
+		public async Tasks.Task<bool> Write(IO.ITextIndenter indenter, int parentPrecedance) {
+			return this.Precedence < parentPrecedance ?
+				await indenter.Write("(") && await this.Write(indenter) && await indenter.Write(")") :
+				await this.Write(indenter);
 		}
 		#region Static Parse
 		public static Expression Parse(string data)
 		{
-			return Expression.Parse(Tokens.Lexer.FromString(data)).WaitFor();
+			return Expression.Parse(Tokens.Lexer.Tokenize(data)).WaitFor();
 		}
 		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{

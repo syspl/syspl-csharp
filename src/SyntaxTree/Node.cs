@@ -17,6 +17,8 @@
 //
 
 using Generic = System.Collections.Generic;
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
 
 namespace SysPL.SyntaxTree
 {
@@ -26,6 +28,14 @@ namespace SysPL.SyntaxTree
 		protected Node(Generic.IEnumerable<Tokens.Token> source)
 		{
 			this.Source = source;
+		}
+		public abstract Tasks.Task<bool> Write(IO.ITextIndenter indenter);
+		public override string ToString()
+		{
+			string result = null;
+			using (var indenter = IO.TextIndenter.Open(r => result = r))
+				this.Write(indenter).Wait();
+			return result;
 		}
 	}
 }

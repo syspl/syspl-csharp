@@ -19,6 +19,8 @@
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
@@ -43,9 +45,9 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return this.Name.GetHashCode();
 		}
-		public override string ToString()
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
 		{
-			return this.Name;
+			return await indenter.Write(this.Name);
 		}
 		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{

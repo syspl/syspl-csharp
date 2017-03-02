@@ -16,13 +16,17 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 
 namespace SysPL.SyntaxTree.Symbol
 {
-	public class Tuple : Expression
+	public class Tuple :
+		Expression
 	{
 		public Generic.IEnumerable<Expression> Elements { get; }
 		public Tuple(params Expression[] elements) :
@@ -33,6 +37,13 @@ namespace SysPL.SyntaxTree.Symbol
 		{
 			this.Elements = elements;
 		}
+		public override async Tasks.Task<bool> Write(IO.ITextIndenter indenter)
+		{
+			return await indenter.Write("(") &&
+			await indenter.Join(this.Elements.Map(element => (Func<IO.ITextWriter, Tasks.Task<bool>>)(writer => element.Write(writer as IO.ITextIndenter))), ", ") &&
+			await indenter.Write(")");
+		}
+
 		#region Static Parse
 		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
