@@ -1,0 +1,16 @@
+language: csharp
+dist: xenial
+sudo: required
+dotnet: 1.0.0-preview2.1-003155
+script:
+  - dotnet restore
+  - dotnet build **/project.json --configuration Release
+  - dotnet test test/ --configuration Release
+after_success:
+  - dotnet pack src/ --configuration Release --version-suffix $(printf "CI%05d" $TRAVIS_BUILD_NUMBER) -o .
+  - curl -L -o nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  - mono nuget.exe push *.*.*.*-CI?????.nupkg $NUGET_API_KEY -Source https://www.myget.org/F/syspl/api/v2/package
+notifications:
+  email:
+    on_success: never
+    on_failure: always
