@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016  Simon Mika <simon@mika.se>
+// Copyright (C) 2017  Simon Mika <simon@mika.se>
 //
 // This file is part of SysPL.
 //
@@ -16,18 +16,13 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Xunit;
-
-namespace SysPL.SyntaxTree
+namespace SysPL.Tokens
 {
-	public class BuildTreeTests
+	public enum OperatorType
 	{
-		[Fact]
-		public void StringLiteral()
-		{
-			var stringLiteral = new StringLiteral("Hac\"ker", "\"Hac\\\"er\"", new Type.Identifier("string"));
-			Assert.Equal(stringLiteral.Value, "Hac\"ker");
-			Assert.Equal(stringLiteral.Raw, "\"Hac\\\"er\"");
-		}
+		Unknown,
+		Prefix,
+		Infix,
+		Postfix,
 	}
 }

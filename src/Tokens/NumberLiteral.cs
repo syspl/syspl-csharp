@@ -16,6 +16,9 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
@@ -27,13 +30,25 @@ namespace SysPL.Tokens
 			base(source)
 		{
 		}
-		public static bool StartsNumber(char c)
+		public static bool StartsNumber(char? c)
 		{
-			return char.IsDigit(c);
+			return c.HasValue && char.IsDigit(c.Value);
 		}
-		public static bool IsWithinNumber(char c)
+		public static bool IsWithinNumber(char? c)
 		{
-			return char.IsLetterOrDigit(c) || c == '_' || c == '.';
+			return c.HasValue && (char.IsLetterOrDigit(c.Value) || c == '_' || c == '.');
+		}
+		public static async Tasks.Task<Token> Parse(IO.ITextReader reader)
+		{
+			Token result = null;
+			if (NumberLiteral.StartsNumber(await reader.Peek()))
+			{
+				var floatingPoint = false;
+				var mark = reader.Mark();
+				string r = await reader.ReadPast(c => !((floatingPoint = c == '.') || NumberLiteral.IsWithinNumber(c)));
+				result = floatingPoint ? (Literal)FloatingPointLiteral.Parse(r, await mark.ToFragment()) : IntegerLiteral.Parse(r, await mark.ToFragment());
+			}
+			return result;
 		}
 	}
 }

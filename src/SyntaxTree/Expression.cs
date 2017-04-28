@@ -38,9 +38,9 @@ namespace SysPL.SyntaxTree
 				await indenter.Write("(") && await this.Write(indenter) && await indenter.Write(")") :
 				await this.Write(indenter);
 		}
-		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static new Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
 		{
-			return null;
+			return Tasks.Task.FromResult<Expression>(null);
 		}
 	}
 }

@@ -16,26 +16,67 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
 {
-	public abstract class Operator :
+	public class Operator :
 		Token
 	{
 		public string Symbol { get; }
-		protected Operator(string symbol, Text.Fragment source) :
+		public OperatorType Type { get; }
+		public Operator(string symbol, Text.Fragment source = null) :
+			this(symbol, OperatorType.Unknown, source)
+		{ }
+		public Operator(string symbol, OperatorType type, Text.Fragment source = null) :
 			base(source)
 		{
 			this.Symbol = symbol;
+			this.Type = type;
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Operator && this.Symbol == (other as Operator).Symbol;
 		}
 		public override string ToString()
 		{
 			return this.Symbol;
 		}
-		public static bool IsOperator(char c)
+		public static bool IsOperator(char? c)
 		{
 			return c == '/' || c == '=' || c == '-' || c == '+' || c == '!' || c == '*' || c == '%' || c == '<' || c == '>' || c == '&' || c == '|' || c == '^' || c == '~' || c == '.' || c == '?' || c == ':';
+		}
+		public static async Tasks.Task<Token> Parse(IO.ITextReader reader)
+		{
+			Token result = null;
+			if (Operator.IsOperator(await reader.Peek()))
+			{
+				var mark = reader.Mark();
+				string r = await reader.ReadUpTo(c => !Operator.IsOperator(c));
+				switch (r)
+				{
+					case "//":
+						result = new Comment(r + reader.ReadPast(c => c == '\n'), await mark.ToFragment());
+						break;
+					case "/*":
+						int depth = 0;
+						char previous = '\0';
+						result = new Comment(r + reader.ReadPast(c =>
+						{
+							if (previous == '/' && c == '*')
+								depth++;
+							return previous == '*' && (previous = c) == '/' && depth-- == 0;
+						}) + "/", await mark.ToFragment());
+						break;
+					default:
+						result = new Operator(r, await mark.ToFragment());
+						break;
+				}
+			}
+			return result;
 		}
 	}
 }

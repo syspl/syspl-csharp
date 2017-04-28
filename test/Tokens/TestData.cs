@@ -30,15 +30,15 @@ namespace SysPL.Tokens
 				yield return new Comment(" A wonderfully long comment ");
 				yield return new FloatingPointLiteral(13.37);
 				yield return new Identifier("Identifier");
-				yield return new InfixOperator("*");
 				yield return new IntegerLiteral(42);
 				yield return new Keyword(Keywords.Let);
 				yield return new LeftBrace();
 				yield return new LeftBracket();
 				yield return new LeftParenthesis();
 				yield return new NullLiteral();
-				yield return new PostfixOperator("++");
-				yield return new PrefixOperator("--");
+				yield return new Operator("++", OperatorType.Prefix);
+				yield return new Operator("*", OperatorType.Infix);
+				yield return new Operator("--", OperatorType.Postfix);
 				yield return new RightBrace();
 				yield return new RightBracket();
 				yield return new RightParenthesis();
@@ -55,7 +55,6 @@ namespace SysPL.Tokens
 				yield return "/* A wonderfully long comment */";
 				yield return "13.37";
 				yield return "Identifier";
-				yield return "*";
 				yield return "42";
 				yield return "let";
 				yield return "{";
@@ -63,6 +62,7 @@ namespace SysPL.Tokens
 				yield return "(";
 				yield return "null";
 				yield return "++";
+				yield return "*";
 				yield return "--";
 				yield return "}";
 				yield return "]";

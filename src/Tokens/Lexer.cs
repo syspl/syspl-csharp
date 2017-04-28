@@ -20,18 +20,42 @@ using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
 using Kean.Extension;
 using IO = Kean.IO;
+using System;
+using System.Collections;
 
 namespace SysPL.Tokens
 {
-	public static class Lexer
+	public class Lexer :
+		Generic.IEnumerator<Tasks.Task<Token>>
 	{
-		static Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
+		Tokenizer tokenizer;
+		public Tasks.Task<Token> Current { get; private set; }
+		object IEnumerator.Current => this.Current;
+		Lexer(Tokenizer tokenizer)
 		{
-			if (tokenizer.NotNull())
-				while (!tokenizer.Empty)
-					yield return tokenizer.Next();
+			this.tokenizer = tokenizer;
+		}
+		public bool MoveNext()
+		{
+			return (this.Current = this.tokenizer.Next()).NotNull();
+		}
+		public void Reset()
+		{
+			throw new NotImplementedException();
+		}
+		public void Dispose()
+		{
+			if (this.tokenizer.NotNull())
+			{
+				this.tokenizer.Close().Forget();
+				this.tokenizer = null;
+			}
 		}
 		#region Static Open
+		static Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
+		{
+			return tokenizer.NotNull() ? new Lexer(tokenizer) : null;
+		}
 		public static Generic.IEnumerator<Tasks.Task<Token>> Tokenize(string content)
 		{
 			return Lexer.Open(IO.TextReader.From(content));

@@ -16,6 +16,9 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
@@ -40,6 +43,20 @@ namespace SysPL.Tokens
 		public static bool IsWhiteSpace(char c)
 		{
 			return char.IsWhiteSpace(c);
+		}
+		public static bool IsWhiteSpace(char? c)
+		{
+			return c.HasValue && char.IsWhiteSpace(c.Value);
+		}
+		public async static Tasks.Task<Token> Parse(IO.ITextReader reader)
+		{
+			Token result = null;
+			if (WhiteSpace.IsWhiteSpace(await reader.Peek()))
+			{
+				var mark = reader.Mark();
+				result = new WhiteSpace(await reader.ReadUpTo(c => !WhiteSpace.IsWhiteSpace(c)), await mark.ToFragment());
+			}
+			return result;
 		}
 	}
 }

@@ -16,6 +16,9 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
@@ -37,13 +40,23 @@ namespace SysPL.Tokens
 		{
 			return other is Identifier && this.Name == (other as Identifier).Name;
 		}
-		public static bool StartsIdentifier(char c)
+		public static bool StartsIdentifier(char? c)
 		{
-			return char.IsLetter(c) || c == '_';
+			return c.HasValue && (char.IsLetter(c.Value) || c == '_');
 		}
-		public static bool IsWithinIdentifier(char c)
+		public static bool IsWithinIdentifier(char? c)
 		{
-			return char.IsLetterOrDigit(c) || c == '_';
+			return c.HasValue && (char.IsLetterOrDigit(c.Value) || c == '_');
+		}
+		public static async Tasks.Task<Token> Parse(IO.ITextReader reader)
+		{
+			Token result = null;
+			if (Identifier.StartsIdentifier(await reader.Peek())) // Keyword, Identifier, Boolean Literal or Null Literal
+			{
+				var mark = reader.Mark();
+				result = Identifier.Parse(await reader.ReadPast(c => !Identifier.IsWithinIdentifier(c)), await mark.ToFragment());
+			}
+			return result;
 		}
 		public static Token Parse(string data, Text.Fragment source)
 		{

@@ -16,6 +16,9 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Tasks = System.Threading.Tasks;
+using IO = Kean.IO;
+using Kean.IO.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
@@ -30,6 +33,20 @@ namespace SysPL.Tokens
 		public static bool IsSeparator(char c)
 		{
 			return c == '(' || c == '[' || c == '{' || c == ')' || c == ']' || c == '}' || c == ',' || c == ';';
+		}
+		public static bool IsSeparator(char? c)
+		{
+			return c.HasValue && Separator.IsSeparator(c.Value);
+		}
+		public static async Tasks.Task<Token> Parse(IO.ITextReader reader)
+		{
+			Token result = null;
+			if (Separator.IsSeparator(await reader.Peek()))
+			{
+				var mark = reader.Mark();
+				result = Separator.Parse((await reader.Read()).Value, await (Tasks.Task<Text.Fragment>)mark);
+			}
+			return result;
 		}
 		public static Separator Parse(char data, Text.Fragment source)
 		{
