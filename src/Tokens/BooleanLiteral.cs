@@ -24,9 +24,18 @@ namespace SysPL.Tokens
 		Literal
 	{
 		public readonly bool Value;
-		public BooleanLiteral(bool value, Text.Fragment source) : base(source)
+		public BooleanLiteral(bool value, Text.Fragment source = null) :
+			base(source)
 		{
 			this.Value = value;
+		}
+		public override string ToString()
+		{
+			return this.Value ? "true" : "false";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is BooleanLiteral && this.Value == (other as BooleanLiteral).Value;
 		}
 	}
 }

@@ -29,6 +29,10 @@ namespace SysPL.Tokens
 		{
 			this.Symbol = symbol;
 		}
+		public override string ToString()
+		{
+			return this.Symbol;
+		}
 		public static bool IsOperator(char c)
 		{
 			return c == '/' || c == '=' || c == '-' || c == '+' || c == '!' || c == '*' || c == '%' || c == '<' || c == '>' || c == '&' || c == '|' || c == '^' || c == '~' || c == '.' || c == '?' || c == ':';

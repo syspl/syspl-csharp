@@ -20,13 +20,22 @@ using Text = Kean.Text;
 
 namespace SysPL.Tokens
 {
-	public class Identifier : Token
+	public class Identifier :
+		Token
 	{
 		public string Name { get; }
-		public Identifier(string name, Text.Fragment source) :
+		public Identifier(string name, Text.Fragment source = null) :
 			base(source)
 		{
 			this.Name = name;
+		}
+		public override string ToString()
+		{
+			return this.Name;
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Identifier && this.Name == (other as Identifier).Name;
 		}
 		public static bool StartsIdentifier(char c)
 		{

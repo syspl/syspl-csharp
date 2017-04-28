@@ -18,27 +18,42 @@
 
 using Xunit;
 using Generic = System.Collections.Generic;
+using Kean.Extension;
 
-namespace SysPL.SyntaxTree.Type
+namespace SysPL.Tokens
 {
-	public class StringTest
+	public class EqualTest
 	{
-		public static Generic.IEnumerable<object[]> Data {
+		public static Generic.IEnumerable<object[]> EqualData {
 			get {
-				yield return new object[] { "int", new Identifier("int") };
-				yield return new object[] { "string", new Identifier("string") };
-				yield return new object[] { "(string, int)", new Tuple(new Identifier("string"), new Identifier("int")) };
+				return TestData.Tokens.Zip(TestData.Tokens, (left, right) => new object[] { left, right });
 			}
 		}
-		[Theory, MemberData("Data")]
-		public void Stringify(string expected, Expression actual)
-		{
-			Assert.Equal(expected, actual.ToString());
+		public static Generic.IEnumerable<object[]> NotEqualData {
+			get {
+				var i = 0;
+				foreach (var t in TestData.Tokens)
+				{
+					var j = 0;
+					foreach (var s in TestData.Tokens)
+					{
+						if (i != j)
+							yield return new object[] { t, s };
+						j++;
+					}
+					i++;
+				}
+			}
 		}
-		[Theory, MemberData("Data")]
-		public void Parse(string actual, Expression expected)
+		[Theory, MemberData("EqualData")]
+		public void Equal(Tokens.Token expected, Tokens.Token actual)
 		{
-			//Assert.Equal(expected, Expression.Parse(actual));
+			Assert.Equal(expected, actual);
+		}
+		[Theory, MemberData("NotEqualData")]
+		public void NotEqual(Tokens.Token expected, Tokens.Token actual)
+		{
+			Assert.NotEqual(expected, actual);
 		}
 	}
 }

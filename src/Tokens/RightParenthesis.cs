@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class RightParenthesis :
 		Separator
 	{
-		public RightParenthesis(Text.Fragment source) :
+		public RightParenthesis(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return ")";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is RightParenthesis;
 		}
 	}
 }

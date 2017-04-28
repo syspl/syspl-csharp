@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class LeftBracket :
 		Separator
 	{
-		public LeftBracket(Text.Fragment source) :
+		public LeftBracket(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return "[";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is LeftBracket;
 		}
 	}
 }

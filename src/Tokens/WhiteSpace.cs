@@ -24,10 +24,18 @@ namespace SysPL.Tokens
 		Token
 	{
 		public string Value { get; }
-		public WhiteSpace(string value, Text.Fragment source) :
+		public WhiteSpace(string value, Text.Fragment source = null) :
 			base(source)
 		{
 			this.Value = value;
+		}
+		public override string ToString()
+		{
+			return this.Value;
+		}
+		public override bool Equals(Token other)
+		{
+			return other is WhiteSpace && this.Value == (other as WhiteSpace).Value;
 		}
 		public static bool IsWhiteSpace(char c)
 		{

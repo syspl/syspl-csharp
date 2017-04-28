@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class Comma :
 		Separator
 	{
-		public Comma(Text.Fragment source) :
+		public Comma(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return ",";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Comma;
 		}
 	}
 }

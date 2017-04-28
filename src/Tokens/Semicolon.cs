@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class Semicolon :
 		Separator
 	{
-		public Semicolon(Text.Fragment source) :
+		public Semicolon(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return ";";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Semicolon;
 		}
 	}
 }

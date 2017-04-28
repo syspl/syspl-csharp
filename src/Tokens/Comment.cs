@@ -23,9 +23,19 @@ namespace SysPL.Tokens
 	public class Comment :
 		Token
 	{
-		public Comment(string comment, Text.Fragment source) :
+		public string Content { get; }
+		public Comment(string content, Text.Fragment source = null) :
 			base(source)
 		{
+			this.Content = content;
+		}
+		public override string ToString()
+		{
+			return "/*" + this.Content + "*/";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Comment && this.Content == (other as Comment).Content;
 		}
 	}
 }

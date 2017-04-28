@@ -42,7 +42,7 @@ namespace SysPL.Tokens
 		}
 		static Generic.IEnumerator<Tasks.Task<Token>> Open(Tokenizer tokenizer)
 		{
-			return Lexer.CreateEnumerator(tokenizer).FilterTasks(token => !(token is WhiteSpace || token is Comment));
+			return Lexer.CreateEnumerator(tokenizer); //.FilterTasks(token => !(token is WhiteSpace || token is Comment));
 		}
 		#endregion
 	}

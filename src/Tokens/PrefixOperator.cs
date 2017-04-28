@@ -23,9 +23,13 @@ namespace SysPL.Tokens
 	public class PrefixOperator :
 		Operator
 	{
-		public PrefixOperator(string name, Text.Fragment source) :
+		public PrefixOperator(string name, Text.Fragment source = null) :
 			base(name, source)
 		{
+		}
+		public override bool Equals(Token other)
+		{
+			return other is PrefixOperator && this.Symbol == (other as PrefixOperator).Symbol;
 		}
 	}
 }

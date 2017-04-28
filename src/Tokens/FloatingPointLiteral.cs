@@ -24,10 +24,18 @@ namespace SysPL.Tokens
 		NumberLiteral
 	{
 		public double Value { get; }
-		FloatingPointLiteral(double value, Text.Fragment source) :
+		public FloatingPointLiteral(double value, Text.Fragment source = null) :
 			base(source)
 		{
 			this.Value = value;
+		}
+		public override string ToString()
+		{
+			return this.Value.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+		}
+		public override bool Equals(Token other)
+		{
+			return other is FloatingPointLiteral && this.Value == (other as FloatingPointLiteral).Value;
 		}
 		public static FloatingPointLiteral Parse(string raw, Text.Fragment region)
 		{

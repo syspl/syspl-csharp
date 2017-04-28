@@ -16,20 +16,36 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using Kean.Extension;
 using Text = Kean.Text;
 
 namespace SysPL.Tokens
 {
-	public abstract class Token
+	public abstract class Token :
+		IEquatable<Token>
 	{
 		public Text.Fragment Source { get; }
 		protected Token(Text.Fragment source)
 		{
 			this.Source = source;
 		}
-		public override string ToString()
+		public override sealed int GetHashCode()
 		{
-			return this.Source.Content;
+			return this.ToString().GetHashCode();
+		}
+		public override sealed bool Equals(object other)
+		{
+			return other is Token && this.Equals(other);
+		}
+		public abstract bool Equals(Token token);
+		public static bool operator ==(Token left, Token right)
+		{
+			return left.Same(right) || left.NotNull() && left.Equals(right);
+		}
+		public static bool operator !=(Token left, Token right)
+		{
+			return !(left == right);
 		}
 	}
 }

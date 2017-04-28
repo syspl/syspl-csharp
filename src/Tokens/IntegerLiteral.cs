@@ -24,10 +24,18 @@ namespace SysPL.Tokens
 		NumberLiteral
 	{
 		public readonly long Value;
-		IntegerLiteral(long value, Text.Fragment source) :
+		public IntegerLiteral(long value, Text.Fragment source = null) :
 			base(source)
 		{
 			this.Value = value;
+		}
+		public override string ToString()
+		{
+			return this.Value.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+		}
+		public override bool Equals(Token other)
+		{
+			return other is IntegerLiteral && this.Value == (other as IntegerLiteral).Value;
 		}
 		public static IntegerLiteral Parse(string raw, Text.Fragment source)
 		{

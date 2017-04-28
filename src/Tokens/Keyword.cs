@@ -16,70 +16,33 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Text = Kean.Text;
+
 namespace SysPL.Tokens
 {
-	public enum Keywords
+	public class Keyword :
+		Token
 	{
-		// Keywords used in Declarations
-		Class,
-		Deinit,
-		Enum,
-		Extension,
-		Func,
-		Import,
-		Init,
-		Let,
-		Interface,
-		Static,
-		Struct,
-		Subscript,
-		TypeAlias,
-		Var,
-		// Keywords used in Statements
-		Break,
-		Case,
-		Continue,
-		Default,
-		Do,
-		Else,
-		Fallthrough,
-		If,
-		In,
-		For,
-		Return,
-		Switch,
-		Where,
-		While,
-		// Keywords used in Expressions and Types
-		As,
-		DynamicType,
-		Is,
-		New,
-		Super,
-		This,
-		StaticThis,
-		Type,
-		Column,
-		File,
-		Function,
-		Line,
-		// Keywords reserved in particular contexts
-		Associativity,
-		DidSet,
-		Get,
-		Infix,
-		InOut,
-		Left,
-		Mutating,
-		None,
-		NonMutating,
-		Operator,
-		Override,
-		Postfix,
-		Precedence,
-		Prefix,
-		Right,
-		Set,
-		WillSet
+		public Keywords Name { get; }
+		public Keyword(Keywords name, Text.Fragment source = null) :
+			base(source)
+		{
+			this.Name = name;
+		}
+		public override string ToString()
+		{
+			string result;
+			switch (this.Name)
+			{
+				default:
+					result = this.Name.ToString().ToLower();
+					break;
+			}
+			return result;
+		}
+		public override bool Equals(Token other)
+		{
+			return other is Keyword && this.Name == (other as Keyword).Name;
+		}
 	}
 }

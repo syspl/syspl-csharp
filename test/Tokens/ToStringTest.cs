@@ -1,4 +1,4 @@
-// Copyright (C) 2014, 2017  Simon Mika <simon@mika.se>
+// Copyright (C) 2017  Simon Mika <simon@mika.se>
 //
 // This file is part of SysPL.
 //
@@ -16,26 +16,23 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Text = Kean.Text;
+using Xunit;
+using Generic = System.Collections.Generic;
+using Kean.Extension;
 
 namespace SysPL.Tokens
 {
-	public class StringLiteral :
-		Literal
+	public class ToStringTest
 	{
-		public string Value { get; }
-		public StringLiteral(string value, Text.Fragment source = null) :
-			base(source)
-		{
-			this.Value = value;
+		public static Generic.IEnumerable<object[]> Data {
+			get {
+				return TestData.Strings.Zip(TestData.Tokens, (left, right) => new object[] { left, right });
+			}
 		}
-		public override string ToString()
+		[Theory, MemberData("Data")]
+		public void Stringify(string expected, Tokens.Token actual)
 		{
-			return "\"" + this.Value + "\"";
-		}
-		public override bool Equals(Token other)
-		{
-			return other is StringLiteral && this.Value == (other as StringLiteral).Value;
+			Assert.Equal(expected, actual.ToString());
 		}
 	}
 }

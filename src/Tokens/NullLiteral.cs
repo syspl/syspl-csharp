@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class NullLiteral :
 		Literal
 	{
-		public NullLiteral(Text.Fragment source) :
+		public NullLiteral(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return "null";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is NullLiteral;
 		}
 	}
 }

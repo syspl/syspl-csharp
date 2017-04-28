@@ -23,9 +23,13 @@ namespace SysPL.Tokens
 	public class PostfixOperator :
 		Operator
 	{
-		public PostfixOperator(string symbol, Text.Fragment source) :
+		public PostfixOperator(string symbol, Text.Fragment source = null) :
 			base(symbol, source)
 		{
+		}
+		public override bool Equals(Token other)
+		{
+			return other is PostfixOperator && this.Symbol == (other as PostfixOperator).Symbol;
 		}
 	}
 }

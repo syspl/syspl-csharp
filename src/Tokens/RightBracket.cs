@@ -23,9 +23,17 @@ namespace SysPL.Tokens
 	public class RightBracket :
 		Separator
 	{
-		public RightBracket(Text.Fragment source) :
+		public RightBracket(Text.Fragment source = null) :
 			base(source)
 		{
+		}
+		public override string ToString()
+		{
+			return "]";
+		}
+		public override bool Equals(Token other)
+		{
+			return other is RightBracket;
 		}
 	}
 }

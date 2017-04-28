@@ -23,9 +23,13 @@ namespace SysPL.Tokens
 	public class InfixOperator :
 		Operator
 	{
-		public InfixOperator(string symbol, Text.Fragment source) :
+		public InfixOperator(string symbol, Text.Fragment source = null) :
 			base(symbol, source)
 		{
+		}
+		public override bool Equals(Token other)
+		{
+			return other is InfixOperator && this.Symbol == (other as InfixOperator).Symbol;
 		}
 	}
 }
