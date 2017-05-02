@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Compiler for Syspl. SysPL aimes to become a multi-paradigm, object oriented systems programming language without garbage collection. Aiming at combining high programmer productivity with predictable high execution speeds.</Description>
+    <Copyright>Simon Mika</Copyright>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>SysPL</AssemblyName>
+    <PackageId>SysPL</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kean" Version="3.0.2-*" />
+  </ItemGroup>
+
+</Project>
