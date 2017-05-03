@@ -19,6 +19,7 @@
 using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -61,13 +62,13 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return Expression.Parse(Tokens.Lexer.Tokenize(data)).WaitFor();
 		}
-		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			return (await Function.Parse((await Tuple.Parse(tokens)) ?? (await Identifier.Parse(tokens)), tokens)) ?? new Exception.SyntaxError("type expression", tokens).Throw<Expression>();
 		}
-		internal static async Tasks.Task<Expression> TryParse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async Tasks.Task<Expression> TryParse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			return (await tokens.Current).Is<Tokens.Operator>(token => token.Symbol == ":") && tokens.MoveNext() ? await Expression.Parse(tokens) : null;
+			return tokens.Current.Is<Tokens.Operator>(token => token.Symbol == ":") && await tokens.MoveNext() ? await Expression.Parse(tokens) : null;
 		}
 		#endregion
 	}

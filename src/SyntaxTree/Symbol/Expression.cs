@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 
 namespace SysPL.SyntaxTree.Symbol
 {
@@ -31,12 +32,12 @@ namespace SysPL.SyntaxTree.Symbol
 			this.AssignedType = type;
 		}
 		#region Static Parse
-		internal static async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			return await Expression.TryParse(tokens) ??
 				new Exception.SyntaxError("Identifier, Tuple Pattern or Wildcard", tokens).Throw<Expression>();
 		}
-		internal static async Tasks.Task<Expression> TryParse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async Tasks.Task<Expression> TryParse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			return await Discard.Parse(tokens) ??
 				await Identifier.Parse(tokens) ??

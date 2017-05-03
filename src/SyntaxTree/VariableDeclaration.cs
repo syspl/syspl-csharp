@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -37,21 +38,21 @@ namespace SysPL.SyntaxTree
 			return await indenter.Write("var ") && await this.Symbol.Write(indenter) && await indenter.WriteLine();
 		}
 		#region Static Parse
-		internal static new async Tasks.Task<VariableDeclaration> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static new async Tasks.Task<VariableDeclaration> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			var current = await tokens.Current as Tokens.Keyword;
+			var current = tokens.Current as Tokens.Keyword;
 			VariableDeclaration result = null;
 			bool immutable;
 			if (current.NotNull() && ((immutable = current.Name == Tokens.Keywords.Let) || current.Name == Tokens.Keywords.Var))
 			{
 				Generic.IEnumerable<Tokens.Token> source = new[] { current };
-				if (!tokens.MoveNext())
+				if (!await tokens.MoveNext())
 					new Exception.SyntaxError("symbol expression", tokens).Throw();
 				var symbol = await SyntaxTree.Symbol.Expression.Parse(tokens);
-				if ((await tokens.Current).Is<Tokens.InfixOperator>(t => t.Symbol == "="))
+				if (tokens.Current.Is<Tokens.InfixOperator>(t => t.Symbol == "="))
 				{
-					source = source.Append(await tokens.Current);
-					if (!tokens.MoveNext())
+					source = source.Append(tokens.Current);
+					if (!await tokens.MoveNext())
 						new Exception.SyntaxError("expression", tokens).Throw();
 					result = new VariableDefinition(symbol, await Expression.Parse(tokens), immutable, source);
 				}

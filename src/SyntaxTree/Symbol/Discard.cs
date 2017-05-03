@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -37,10 +38,10 @@ namespace SysPL.SyntaxTree.Symbol
 		{
 			return await indenter.Write("_");
 		}
-		internal static async new Tasks.Task<Discard> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async new Tasks.Task<Discard> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			var current = await tokens.Current as Tokens.Identifier;
-			return current.NotNull() && current.Name == "_" ? new Discard(current, tokens.MoveNext() ? await Type.Expression.TryParse(tokens) : null) : null;
+			var current = tokens.Current as Tokens.Identifier;
+			return current.NotNull() && current.Name == "_" ? new Discard(current, await tokens.MoveNext() ? await Type.Expression.TryParse(tokens) : null) : null;
 		}
 	}
 }

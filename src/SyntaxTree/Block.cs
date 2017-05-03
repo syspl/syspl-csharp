@@ -50,7 +50,7 @@ namespace SysPL.SyntaxTree
 		{
 			return statement is Expression ? (statement as Expression).AssignedType : new Type.Identifier("void");
 		}
-/*		internal static async Generic.IEnumerable<Statement> ParseCodeBlock(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+/*		internal static async Generic.IEnumerable<Statement> ParseCodeBlock(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			var current = await tokens.Current;
 			if (!(current is Tokens.LeftBrace))

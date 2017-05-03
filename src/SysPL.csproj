@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kean" Version="3.0.2-*" />
+    <PackageReference Include="Kean" Version="3.0.32" />
   </ItemGroup>
 
 </Project>

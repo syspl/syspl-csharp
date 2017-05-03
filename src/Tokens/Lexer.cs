@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using System;
@@ -26,22 +27,18 @@ using System.Collections;
 namespace SysPL.Tokens
 {
 	public class Lexer :
-		Generic.IEnumerator<Tasks.Task<Token>>
+		IAsyncEnumerator<Token>,
+		IDisposable
 	{
 		Tokenizer tokenizer;
-		public Tasks.Task<Token> Current { get; private set; }
-		object IEnumerator.Current => this.Current;
+		public Token Current { get; private set; }
 		Lexer(Tokenizer tokenizer)
 		{
 			this.tokenizer = tokenizer;
 		}
-		public bool MoveNext()
+		public async Tasks.Task<bool> MoveNext()
 		{
-			return (this.Current = this.tokenizer.Next()).NotNull();
-		}
-		public void Reset()
-		{
-			throw new NotImplementedException();
+			return (this.Current = await this.tokenizer.Next()).NotNull();
 		}
 		public void Dispose()
 		{
@@ -52,19 +49,19 @@ namespace SysPL.Tokens
 			}
 		}
 		#region Static Open
-		static Generic.IEnumerator<Tasks.Task<Token>> CreateEnumerator(Tokenizer tokenizer)
+		static IAsyncEnumerator<Token> CreateEnumerator(Tokenizer tokenizer)
 		{
 			return tokenizer.NotNull() ? new Lexer(tokenizer) : null;
 		}
-		public static Generic.IEnumerator<Tasks.Task<Token>> Tokenize(string content)
+		public static IAsyncEnumerator<Token> Tokenize(string content)
 		{
 			return Lexer.Open(IO.TextReader.From(content));
 		}
-		public static Generic.IEnumerator<Tasks.Task<Token>> Open(IO.ITextReader reader)
+		public static IAsyncEnumerator<Token> Open(IO.ITextReader reader)
 		{
 			return Lexer.Open(Tokenizer.Open(reader));
 		}
-		static Generic.IEnumerator<Tasks.Task<Token>> Open(Tokenizer tokenizer)
+		static IAsyncEnumerator<Token> Open(Tokenizer tokenizer)
 		{
 			return Lexer.CreateEnumerator(tokenizer); //.FilterTasks(token => !(token is WhiteSpace || token is Comment));
 		}

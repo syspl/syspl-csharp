@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using Error = Kean.Error;
 using Text = Kean.Text;
@@ -30,8 +31,8 @@ namespace SysPL.Exception
 		public string Expected { get; }
 		public string Found { get; }
 		public new Text.Fragment Source { get; }
-		internal SyntaxError(string expected, Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens) :
-			this(expected, "\"" + tokens.Current?.WaitFor()?.Source ?? "nothing" + "\"", tokens.Current?.WaitFor()?.Source)
+		internal SyntaxError(string expected, IAsyncEnumerator<Tokens.Token> tokens) :
+			this(expected, "\"" + tokens.Current?.Source ?? "nothing" + "\"", tokens.Current?.Source)
 		{
 		}
 		internal SyntaxError(string expected, string found, Text.Fragment source) :

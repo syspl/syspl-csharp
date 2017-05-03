@@ -19,6 +19,7 @@
 using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -42,9 +43,9 @@ namespace SysPL.SyntaxTree
 			return await indenter.Join(this.Statements.Map(statement => (Func<IO.ITextWriter, Tasks.Task<bool>>)(writer => statement.Write((IO.ITextIndenter)writer))), (Func<IO.ITextWriter, Tasks.Task<bool>>)(writer => writer.WriteLine()));
 		}
 		#region Static Parse
-		public static async Tasks.Task<File> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		public static async Tasks.Task<File> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			return new File(await Statement.Parse(tokens).WhenAll());
+			return new File((await Statement.Parse(tokens).WhenAll()).ToArray());
 		}
 		#endregion
 	}

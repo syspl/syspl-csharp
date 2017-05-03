@@ -16,8 +16,10 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 
 namespace SysPL.SyntaxTree
@@ -30,13 +32,11 @@ namespace SysPL.SyntaxTree
 		{
 		}
 		#region Static Parse
-		internal static Generic.IEnumerable<Tasks.Task<Statement>> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static IAsyncEnumerator<Statement> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			Tasks.Task<Statement> result;
-			while (tokens.NotNull() && (result = Statement.ParseNext(tokens)).NotNull())
-				yield return result;
+			return AsyncEnumerator.Create(() => Statement.ParseNext(tokens), tokens as IDisposable);
 		}
-		static async Tasks.Task<Statement> ParseNext(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		static async Tasks.Task<Statement> ParseNext(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			return
 				(Statement)await VariableDeclaration.Parse(tokens) ??

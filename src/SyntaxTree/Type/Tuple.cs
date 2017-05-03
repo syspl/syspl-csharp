@@ -19,6 +19,7 @@
 using System;
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -52,24 +53,24 @@ namespace SysPL.SyntaxTree.Type
 			await indenter.Write(")");
 		}
 		#region Static Parse
-		internal static new async Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static new async Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			Expression result = null;
 			if (!(await tokens.Next() is Tokens.RightParenthesis))
 			{
 				Generic.IEnumerable<Expression> elements = null;
-				Generic.IEnumerable<Tokens.Token> source = new[] { await tokens.Current };
+				Generic.IEnumerable<Tokens.Token> source = new[] { tokens.Current };
 				do
 				{
 					elements = elements.Append(await Expression.Parse(tokens));
-					source = source.Append(await tokens.Current);
+					source = source.Append(tokens.Current);
 				}
-				while (await tokens.Current is Tokens.Comma && tokens.MoveNext());
-				if (!(await tokens.Current is Tokens.RightParenthesis))
+				while (tokens.Current is Tokens.Comma && await tokens.MoveNext());
+				if (!(tokens.Current is Tokens.RightParenthesis))
 					new Exception.SyntaxError("right parenthesis \")\"", tokens).Throw();
-				source = source.Append(await tokens.Current);
+				source = source.Append(tokens.Current);
 				result = new Tuple(elements, source);
-				tokens.MoveNext();
+				await tokens.MoveNext();
 			}
 			return result;
 		}

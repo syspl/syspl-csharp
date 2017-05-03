@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using Kean.Extension;
 using IO = Kean.IO;
 using Kean.IO.Extension;
@@ -44,11 +45,10 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return await this.Argument.Write(indenter, this.Precedence) && await indenter.Write(" => ") && await this.Result.Write(indenter, this.Precedence);
 		}
-		internal static async Tasks.Task<Expression> Parse(Expression argument, Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static async Tasks.Task<Expression> Parse(Expression argument, IAsyncEnumerator<Tokens.Token> tokens)
 		{
-			var current = await tokens.Current as Tokens.Operator;
-			tokens.MoveNext();
-			return argument.NotNull() && current.Symbol == "=>" ? new Function(argument, await Expression.Parse(tokens), current) : argument;
+			var current = tokens.Current as Tokens.Operator;
+			return argument.NotNull() && current?.Symbol == "=>" && await tokens.MoveNext() ? new Function(argument, await Expression.Parse(tokens), current) : argument;
 		}
 	}
 }

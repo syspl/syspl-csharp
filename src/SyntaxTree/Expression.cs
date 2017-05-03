@@ -18,6 +18,7 @@
 
 using Generic = System.Collections.Generic;
 using Tasks = System.Threading.Tasks;
+using Kean;
 using IO = Kean.IO;
 using Kean.IO.Extension;
 
@@ -38,7 +39,7 @@ namespace SysPL.SyntaxTree
 				await indenter.Write("(") && await this.Write(indenter) && await indenter.Write(")") :
 				await this.Write(indenter);
 		}
-		internal static new Tasks.Task<Expression> Parse(Generic.IEnumerator<Tasks.Task<Tokens.Token>> tokens)
+		internal static new Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			return Tasks.Task.FromResult<Expression>(null);
 		}

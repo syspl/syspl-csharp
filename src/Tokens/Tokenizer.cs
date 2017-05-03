@@ -37,11 +37,12 @@ namespace SysPL.Tokens
 		{
 			var mark = this.reader.Mark();
 			return
-				await WhiteSpace.Parse(reader) ??
-				await Separator.Parse(reader) ??
-				await Operator.Parse(reader) ??
-				await NumberLiteral.Parse(reader) ??
-				await Identifier.Parse(reader) ??
+				await this.reader.Empty ? null :
+				await WhiteSpace.Parse(this.reader) ??
+				await Separator.Parse(this.reader) ??
+				await Operator.Parse(this.reader) ??
+				await NumberLiteral.Parse(this.reader) ??
+				await Identifier.Parse(this.reader) ??
 				new Exception.LexicalError("a valid token", "invalid character (\"" + await this.reader.Peek() + "\" " + ((int)await this.reader.Read()).ToString("x") + ")", await mark.ToFragment()).Throw<Token>();
 		}
 		public async Tasks.Task<bool> Close()
