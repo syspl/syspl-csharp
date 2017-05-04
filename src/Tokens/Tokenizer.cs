@@ -42,6 +42,7 @@ namespace SysPL.Tokens
 				await Separator.Parse(this.reader) ??
 				await Operator.Parse(this.reader) ??
 				await NumberLiteral.Parse(this.reader) ??
+				await StringLiteral.Parse(this.reader) ??
 				await Identifier.Parse(this.reader) ??
 				new Exception.LexicalError("a valid token", "invalid character (\"" + await this.reader.Peek() + "\" " + ((int)await this.reader.Read()).ToString("x") + ")", await mark.ToFragment()).Throw<Token>();
 		}

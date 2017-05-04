@@ -59,17 +59,17 @@ namespace SysPL.Tokens
 				switch (r)
 				{
 					case "//":
-						result = new Comment(r + reader.ReadPast(c => c == '\n'), await mark.ToFragment());
+						result = new Comment(r + await reader.ReadPast(c => c == '\n'), await mark.ToFragment());
 						break;
 					case "/*":
 						int depth = 0;
 						char previous = '\0';
-						result = new Comment(r + reader.ReadPast(c =>
+						result = new Comment(r + await reader.ReadPast(c =>
 						{
 							if (previous == '/' && c == '*')
 								depth++;
 							return previous == '*' && (previous = c) == '/' && depth-- == 0;
-						}) + "/", await mark.ToFragment());
+						}), await mark.ToFragment());
 						break;
 					default:
 						result = new Operator(r, await mark.ToFragment());

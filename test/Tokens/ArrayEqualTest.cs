@@ -1,4 +1,4 @@
-// Copyright (C) 2014, 2017  Simon Mika <simon@mika.se>
+// Copyright (C) 2017  Simon Mika <simon@mika.se>
 //
 // This file is part of SysPL.
 //
@@ -16,26 +16,31 @@
 // along with SysPL.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Text = Kean.Text;
+using Xunit;
+using Generic = System.Collections.Generic;
+using Kean.Extension;
 
 namespace SysPL.Tokens
 {
-	public class Comment :
-		Token
+	public class ArrayEqualTest
 	{
-		public string Content { get; }
-		public Comment(string content, Text.Fragment source = null) :
-			base(source)
+		public static Generic.IEnumerable<object[]> ArrayEqualData
 		{
-			this.Content = content;
+			get
+			{
+				yield return new object[] { TestData.Tokens.ToArray(), TestData.Tokens.ToArray() };
+			}
 		}
-		public override string ToString()
+		[Theory, MemberData("ArrayEqualData")]
+		public void SameOrEquals(Tokens.Token[] expected, Tokens.Token[] actual)
 		{
-			return this.Content;
+			Assert.True(expected.SameOrEquals(actual));
 		}
-		public override bool Equals(Token other)
-		{
-			return other is Comment && this.Content == (other as Comment).Content;
-		}
+		// TODO: Why does this test crash the test runner?
+//		[Theory, MemberData("ArrayEqualData")]
+//		public void Equal(Tokens.Token[] expected, Tokens.Token[] actual)
+//		{
+//			Assert.Equal(expected, actual);
+//		}
 	}
 }

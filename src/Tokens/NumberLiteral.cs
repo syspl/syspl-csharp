@@ -36,7 +36,7 @@ namespace SysPL.Tokens
 		}
 		public static bool IsWithinNumber(char? c)
 		{
-			return c.HasValue && (char.IsLetterOrDigit(c.Value) || c == '_' || c == '.');
+			return c.HasValue && (char.IsDigit(c.Value) || c == '_' || c == '.');
 		}
 		public static async Tasks.Task<Token> Parse(IO.ITextReader reader)
 		{
@@ -45,7 +45,7 @@ namespace SysPL.Tokens
 			{
 				var floatingPoint = false;
 				var mark = reader.Mark();
-				string r = await reader.ReadPast(c => !((floatingPoint = c == '.') || NumberLiteral.IsWithinNumber(c)));
+				string r = await reader.ReadUpTo(c => { if (c == '.') floatingPoint = true; return !NumberLiteral.IsWithinNumber(c); });
 				result = floatingPoint ? (Literal)FloatingPointLiteral.Parse(r, await mark.ToFragment()) : IntegerLiteral.Parse(r, await mark.ToFragment());
 			}
 			return result;

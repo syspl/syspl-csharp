@@ -43,8 +43,6 @@ namespace SysPL.Tokens
 			long v;
 			if (long.TryParse(raw, out v))
 				result = new IntegerLiteral(v, source);
-			else
-				new Exception.LexicalError("an integel literal", "\"" + raw + "\"", source).Throw();
 			return result;
 		}
 

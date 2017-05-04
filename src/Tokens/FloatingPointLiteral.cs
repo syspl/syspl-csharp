@@ -41,10 +41,8 @@ namespace SysPL.Tokens
 		{
 			FloatingPointLiteral result = null;
 			double v;
-			if (double.TryParse(raw, out v))
+			if (double.TryParse(raw, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out v))
 				result = new FloatingPointLiteral(v, region);
-			else
-				new Exception.LexicalError("an floating point literal", "\"" + raw + "\"", region).Throw();
 			return result;
 		}
 	}
