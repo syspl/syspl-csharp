@@ -34,7 +34,9 @@ namespace SysPL.Tokens
 		[Theory, MemberData("ArrayEqualData")]
 		public void SameOrEquals(Tokens.Token[] expected, Tokens.Token[] actual)
 		{
-			Assert.True(expected.SameOrEquals(actual));
+			Assert.Equal(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+				Assert.Equal(expected[i], actual[i]);
 		}
 		// TODO: Why does this test crash the test runner?
 //		[Theory, MemberData("ArrayEqualData")]
