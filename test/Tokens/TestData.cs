@@ -27,7 +27,7 @@ namespace SysPL.Tokens
 				yield return new BooleanLiteral(true);
 				yield return new BooleanLiteral(false);
 				yield return new Comma();
-				yield return new Comment(" A wonderfully long comment ");
+				yield return new Comment("/* A wonderfully long comment */");
 				yield return new FloatingPointLiteral(13.37);
 				yield return new Identifier("Identifier");
 				yield return new IntegerLiteral(42);
