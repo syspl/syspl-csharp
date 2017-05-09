@@ -50,7 +50,7 @@ namespace SysPL.SyntaxTree.Type
 		{
 			return await indenter.Write(this.Name);
 		}
-		internal static new async Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
+		public static new async Tasks.Task<Expression> Parse(IAsyncEnumerator<Tokens.Token> tokens)
 		{
 			var current = tokens.Current as Tokens.Identifier;
 			return current.NotNull() && await tokens.MoveNext() ? new Identifier(current) : null;

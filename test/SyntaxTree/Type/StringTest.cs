@@ -18,6 +18,8 @@
 
 using Xunit;
 using Generic = System.Collections.Generic;
+using Kean;
+using Kean.Extension;
 
 namespace SysPL.SyntaxTree.Type
 {
@@ -38,7 +40,15 @@ namespace SysPL.SyntaxTree.Type
 		[Theory, MemberData("Data")]
 		public void Parse(string actual, Expression expected)
 		{
-			//Assert.Equal(expected, Expression.Parse(actual));
+			//var result = Expression.Parse(actual);
+			//Assert.Equal(expected, result);
+		}
+		[Fact]
+		public void ParseIdentifier()
+		{
+			var tokens = AsyncEnumerator.Create(new Tokens.Identifier("string"));
+			var result = Identifier.Parse(tokens).WaitFor();
+			Assert.Equal(new Identifier("string"), result);
 		}
 	}
 }
