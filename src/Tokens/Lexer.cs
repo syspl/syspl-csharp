@@ -38,7 +38,7 @@ namespace SysPL.Tokens
 		}
 		public async Tasks.Task<bool> MoveNext()
 		{
-			return (this.Current = await this.tokenizer.Next()).NotNull();
+			return (this.Current = await this.tokenizer.Next()).NotNull() && !await this.tokenizer.Empty;
 		}
 		public void Dispose()
 		{

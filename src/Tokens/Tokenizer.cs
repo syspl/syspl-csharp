@@ -28,7 +28,7 @@ namespace SysPL.Tokens
 		IDisposable
 	{
 		IO.ITextReader reader;
-		public Tasks.Task<bool> Empty { get { return this.reader.Empty; } }
+		public Tasks.Task<bool> Empty { get; private set; }
 		Tokenizer(IO.ITextReader reader)
 		{
 			this.reader = reader;
@@ -36,8 +36,9 @@ namespace SysPL.Tokens
 		public async Tasks.Task<Token> Next()
 		{
 			var mark = this.reader.Mark();
+			this.Empty = this.reader.Empty;
 			return
-				await this.reader.Empty ? null :
+				await EndOfFile.Parse(this.reader) ??
 				await WhiteSpace.Parse(this.reader) ??
 				await Separator.Parse(this.reader) ??
 				await Operator.Parse(this.reader) ??

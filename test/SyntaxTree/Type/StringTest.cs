@@ -46,9 +46,18 @@ namespace SysPL.SyntaxTree.Type
 		[Fact]
 		public void ParseIdentifier()
 		{
-			var tokens = AsyncEnumerator.Create(new Tokens.Identifier("string"));
+			var tokens = AsyncEnumerator.Create((Tokens.Token)new Tokens.Identifier("string"), new Tokens.EndOfFile());
+			tokens.MoveNext().Wait();
 			var result = Identifier.Parse(tokens).WaitFor();
 			Assert.Equal(new Identifier("string"), result);
 		}
+		[Fact]
+		public void ParseTuple()
+		{
+/*			var tokens = AsyncEnumerator.Create((Tokens.Token)new Tokens.LeftParenthesis(), new Tokens.Identifier("string"), new Tokens.Comma(), new Tokens.Identifier("int"), new Tokens.RightParenthesis(), new Tokens.EndOfFile());
+			tokens.MoveNext().Wait();
+			var result = Tuple.Parse(tokens).WaitFor();
+			Assert.Equal(new Tuple(new Identifier("string"), new Identifier("int")), result);
+*/		}
 	}
 }
