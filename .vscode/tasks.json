@@ -6,32 +6,17 @@
 	"tasks": [
 		{
 			"taskName": "build",
-			"args": [ "src/SysPL.SyntaxTree" ],
 			"isBuildCommand": true,
 			"showOutput": "silent",
 			"problemMatcher": "$msCompile"
 		},
 		{
 			"taskName": "test",
-			"args": [ "src/SysPL.SyntaxTree.Tests" ],
+			"args": [ "test/SysPL.Tests.csproj" ],
 			"isTestCommand": true,
 			"showOutput": "silent",
 			"problemMatcher": [
-				"$msCompile",
-				{
-					"owner": "xunit",
-					"fileLocation": "absolute",
-					"pattern": [
-						{
-							"regexp": "\\s*(.*)\\((\\d+),(\\d+)\\): at (.*)",
-							"file": 1,
-							"line": 2,
-							"column": 3,
-							"message": 4,
-							"severity": "warning"
-						}
-					]
-				}
+				"$msCompile"
 			]
 		}
 	]
